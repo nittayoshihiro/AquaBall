@@ -29,7 +29,10 @@ public class PlayerController : MonoBehaviour
             //キー入力を検知ベクトルを設定
             m_vector3.x = Input.GetAxis("Horizontal");
             m_vector3.z = Input.GetAxis("Vertical");
-
+            if(Input.GetKey("z"))
+            {
+                m_vector3.y = -1.0f;
+            }
         }
         //スマホデバッグ用
         else
@@ -41,6 +44,6 @@ public class PlayerController : MonoBehaviour
         }
         //シーンの重力を入力ベクトルの方向に合わせて変化させる
         Physics.gravity = m_gravity * m_vector3.normalized * m_gravityScale;
-        Debug.Log(Physics.gravity);
+        //Debug.Log(Physics.gravity);
     }
 }
