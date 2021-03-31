@@ -23,3 +23,6 @@ ExportedObj/
 *.svd
 *.pdb
 *.opendb
+Assets/Toon
+Assets/UnityChan
+Assets/UnityChan.SpringBone
