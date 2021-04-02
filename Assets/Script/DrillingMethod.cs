@@ -17,7 +17,7 @@ public class DrillingMethod : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        CreateMap(Drilling(m_mapSize));
+        CreateMap(Drilling(m_mapSize),"Testmap");
     }
 
     /// <summary>
@@ -92,6 +92,7 @@ public class DrillingMethod : MonoBehaviour
                 ramDirection[ramDirection.Length - 1] = 4;
             }
         }
+
         if (ramDirection.Length == 1)
         {
             //ゴールを記録する
@@ -116,6 +117,7 @@ public class DrillingMethod : MonoBehaviour
                     mapdata[nowposx, nowposy - 2] = 0;
                     DigHole(mapdata, nowposx, nowposy - 2);
                     break;
+
                 case 3:
                     mapdata[nowposx - 1, nowposy] = 0;
                     mapdata[nowposx - 2, nowposy] = 0;
@@ -133,17 +135,24 @@ public class DrillingMethod : MonoBehaviour
 
     /// <summary>
     ///　マップのデータを元にマップを作成
+    ///　
     /// </summary>
-    /// <param name="mapdata"></param>
-    void CreateMap(int[,] mapdata)
+    /// <param name="mapdata">マップデータ</param>
+    /// <param name="mapname">親オブジェクトになる名前</param>
+    void CreateMap(int[,] mapdata,string mapname)
     {
+        //親になるオブジェクトを生成
+        GameObject mapObject = new GameObject(mapname);
+        mapObject.transform.parent = this.gameObject.transform;
+
         for (int x = 0; x < mapdata.GetLength(0); x++)
         {
             for (int z = 0; z < mapdata.GetLength(1); z++)
             {
                 if (mapdata[x, z] == 1)
                 {
-                    Instantiate(m_cubePrefab, new Vector3(x - m_mapSize / 2, 0.5f, z - m_mapSize / 2), Quaternion.identity);
+                    //親の子オブジェクトとして生成
+                    Instantiate(m_cubePrefab, new Vector3(x - m_mapSize / 2, 0.5f, z - m_mapSize / 2), Quaternion.identity).gameObject.transform.parent = mapObject.transform;
                 }
             }
         }
