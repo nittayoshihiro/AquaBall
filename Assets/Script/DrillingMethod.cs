@@ -70,7 +70,7 @@ public class DrillingMethod : MonoBehaviour
         }
         if (0 <= nowposy - 2)
         {
-            if (mapdata[nowposy, nowposy - 2] == 1)//下
+            if (mapdata[nowposx, nowposy - 2] == 1)//下
             {
                 System.Array.Resize(ref ramDirection, ramDirection.Length + 1);
                 ramDirection[ramDirection.Length - 1] = 2;
@@ -101,7 +101,7 @@ public class DrillingMethod : MonoBehaviour
         }
         else
         {
-            int a = ramDirection[Random.Range(1, ramDirection.Length - 1)];
+            int a = ramDirection[Random.Range(1, ramDirection.Length)];
             Debug.Log(a);
             //ランダムで進行方向を決める
             switch (a)
