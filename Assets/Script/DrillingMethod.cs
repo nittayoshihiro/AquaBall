@@ -17,20 +17,28 @@ public class DrillingMethod : MonoBehaviour
     [SerializeField] GameObject m_goalCubePrefab;
     /// <summary>プレイヤープレハブ</summary>
     [SerializeField] GameObject m_playerPrefab;
+    /// <summary>動作が完了したか</summary>
+    bool m_end = false;
 
     // Start is called before the first frame update
-    void Start()
+    public void MappingStart()
     {
-        CreateMap(Drilling(m_mapSize,1,1), "map",1);
-        CreateMap(SetUpMapData(m_mapSize),"floor",0);
+        CreateMap(Drilling(m_mapSize, 1, 1), "map", 1);
+        CreateMap(SetUpMapData(m_mapSize), "floor", 0);
+        m_end = true;
     }
+
+    /// <summary>
+    /// 処理が終了
+    /// </summary>
+    public bool GetEnd { get { return m_end; } }
 
     /// <summary>
     /// 穴掘り関数 (0：道　１：壁)
     /// </summary>
     /// <param name="mapsize">マップサイズ</param>
     /// <returns></returns>
-    MapState[,] Drilling(int mapsize,int startx,int starty)
+    MapState[,] Drilling(int mapsize, int startx, int starty)
     {
         //奇数でないと成り立たないため
         if (m_mapSize % 2 == 1)
@@ -159,7 +167,7 @@ public class DrillingMethod : MonoBehaviour
     /// <param name="nowposy">戻り所Y</param>
     private void ReversDigHole(MapState[,] mapdata, int nowposx, int nowposy)
     {
-        if (mapdata[nowposx,nowposy]== MapState.Start)
+        if (mapdata[nowposx, nowposy] == MapState.Start)
         {
             Debug.Log("終了");
         }
@@ -199,7 +207,7 @@ public class DrillingMethod : MonoBehaviour
                 }
             }
         }
-        
+
     }
 
 
@@ -210,7 +218,7 @@ public class DrillingMethod : MonoBehaviour
     /// <param name="mapdata">マップデータ</param>
     /// <param name="mapname">親オブジェクトになる名前d</param>
     /// <param name="posy">作る高さ</param>
-    void CreateMap(MapState[,] mapdata, string mapname,float posy)
+    void CreateMap(MapState[,] mapdata, string mapname, float posy)
     {
         //親になるオブジェクトを生成
         GameObject mapObject = new GameObject(mapname);
@@ -220,7 +228,7 @@ public class DrillingMethod : MonoBehaviour
         {
             for (int z = 0; z < mapdata.GetLength(1); z++)
             {
-                switch (mapdata[x,z])
+                switch (mapdata[x, z])
                 {
                     case MapState.Wall:
                         //親の子オブジェクトとして生成
