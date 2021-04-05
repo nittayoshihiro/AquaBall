@@ -14,9 +14,9 @@ public class PlayerController : MonoBehaviour
     /// <summary>コントローラーを示す</summary>
     Controller m_controller = Controller.Joystick;
     /// <summary>FloatJoystick</summary>
-    [SerializeField] FloatingJoystick m_joystick;
+    FloatingJoystick m_joystick;
     /// <summary>ジョイスティックゲームオブジェクト</summary>
-    [SerializeField] GameObject m_joystickGameObject;
+    GameObject m_joystickGameObject;
     /// <summary>重力規模</summary>
     [SerializeField] float m_gravityScale = 1.0f;
 
@@ -24,7 +24,8 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        m_joystickGameObject = GameObject.Find("Floating Joystick");
+        m_joystick = m_joystickGameObject.GetComponent<FloatingJoystick>();
     }
 
     // Update is called once per frame

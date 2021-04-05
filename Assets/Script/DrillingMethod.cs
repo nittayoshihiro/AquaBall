@@ -11,13 +11,18 @@ public class DrillingMethod : MonoBehaviour
     [SerializeField] int m_mapSize;
     /// <summary>キューブプレハブ</summary>
     [SerializeField] GameObject m_cubePrefab;
-    /// <summary>スタートとゴールを記録する</summary>
-    int m_startx, m_starty, m_goalx, m_goaly;
+    /// <summary>スタートキューブプレハブ</summary>
+    [SerializeField] GameObject m_startCubePrefab;
+    /// <summary>ゴールキューブプレハブ</summary>
+    [SerializeField] GameObject m_goalCubePrefab;
+    /// <summary>プレイヤープレハブ</summary>
+    [SerializeField] GameObject m_playerPrefab;
 
     // Start is called before the first frame update
     void Start()
     {
-        CreateMap(Drilling(m_mapSize), "Testmap");
+        CreateMap(Drilling(m_mapSize,1,1), "map",1);
+        CreateMap(SetUpMapData(m_mapSize),"floor",0);
     }
 
     /// <summary>
@@ -25,23 +30,16 @@ public class DrillingMethod : MonoBehaviour
     /// </summary>
     /// <param name="mapsize">マップサイズ</param>
     /// <returns></returns>
-    MapState[,] Drilling(int mapsize)
+    MapState[,] Drilling(int mapsize,int startx,int starty)
     {
         //奇数でないと成り立たないため
         if (m_mapSize % 2 == 1)
         {
             //mapデータを作成　初期化（全て壁）
-            MapState[,] mapdata = new MapState[mapsize, mapsize];
-            for (int x = 0; x < mapsize; x++)
-            {
-                for (int y = 0; y < mapsize; y++)
-                {
-                    mapdata[x, y] = MapState.Wall;
-                }
-            }
+            MapState[,] mapdata = SetUpMapData(mapsize);
             //穴掘り
-            mapdata[1, 1] = MapState.Road;//スタート
-            DigHole(mapdata, 1, 1);
+            mapdata[startx, starty] = MapState.Start;//スタート
+            DigHole(mapdata, startx, starty);
             //ReversDigHole(mapdata, m_goalx, m_goaly);
             return mapdata;
         }
@@ -51,6 +49,25 @@ public class DrillingMethod : MonoBehaviour
             return null;
         }
     }
+
+    /// <summary>
+    /// マップの初期化
+    /// </summary>
+    /// <param name="mapsize"></param>
+    /// <returns></returns>
+    private MapState[,] SetUpMapData(int mapsize)
+    {
+        MapState[,] mapdata = new MapState[mapsize, mapsize];
+        for (int x = 0; x < mapsize; x++)
+        {
+            for (int y = 0; y < mapsize; y++)
+            {
+                mapdata[x, y] = MapState.Wall;
+            }
+        }
+        return mapdata;
+    }
+
 
     /// <summary>
     /// スタートからゴールまで穴を掘る
@@ -95,11 +112,10 @@ public class DrillingMethod : MonoBehaviour
             }
         }
 
+        //掘り進められなかったらゴールにする
         if (ramDirection.Length == 1)
         {
-            //ゴールを記録する
-            m_goalx = nowposx;
-            m_goaly = nowposy;
+            mapdata[nowposx, nowposy] = MapState.Goal;
         }
         else
         {
@@ -143,7 +159,7 @@ public class DrillingMethod : MonoBehaviour
     /// <param name="nowposy">戻り所Y</param>
     private void ReversDigHole(MapState[,] mapdata, int nowposx, int nowposy)
     {
-        if (m_startx == nowposx && m_starty == nowposy)
+        if (mapdata[nowposx,nowposy]== MapState.Start)
         {
             Debug.Log("終了");
         }
@@ -192,8 +208,9 @@ public class DrillingMethod : MonoBehaviour
     ///　
     /// </summary>
     /// <param name="mapdata">マップデータ</param>
-    /// <param name="mapname">親オブジェクトになる名前</param>
-    void CreateMap(MapState[,] mapdata, string mapname)
+    /// <param name="mapname">親オブジェクトになる名前d</param>
+    /// <param name="posy">作る高さ</param>
+    void CreateMap(MapState[,] mapdata, string mapname,float posy)
     {
         //親になるオブジェクトを生成
         GameObject mapObject = new GameObject(mapname);
@@ -203,14 +220,25 @@ public class DrillingMethod : MonoBehaviour
         {
             for (int z = 0; z < mapdata.GetLength(1); z++)
             {
-                if (mapdata[x, z] == MapState.Wall)
+                switch (mapdata[x,z])
                 {
-                    //親の子オブジェクトとして生成
-                    Instantiate(m_cubePrefab, new Vector3(x - m_mapSize / 2, 0.5f, z - m_mapSize / 2), Quaternion.identity).gameObject.transform.parent = mapObject.transform;
+                    case MapState.Wall:
+                        //親の子オブジェクトとして生成
+                        Instantiate(m_cubePrefab, new Vector3(x - m_mapSize / 2, posy, z - m_mapSize / 2), Quaternion.identity).gameObject.transform.parent = mapObject.transform;
+                        break;
+                    case MapState.Start:
+                        Instantiate(m_startCubePrefab, new Vector3(x - m_mapSize / 2, posy, z - m_mapSize / 2), Quaternion.identity).gameObject.transform.parent = mapObject.transform;
+                        Instantiate(m_playerPrefab, new Vector3(x - m_mapSize / 2, posy, z - m_mapSize / 2), Quaternion.identity);
+                        break;
+                    case MapState.Goal:
+                        Instantiate(m_goalCubePrefab, new Vector3(x - m_mapSize / 2, posy, z - m_mapSize / 2), Quaternion.identity).gameObject.transform.parent = mapObject.transform;
+                        break;
                 }
             }
         }
     }
+
+
 
     /// <summary>
     /// マップのステータス管理
@@ -218,6 +246,8 @@ public class DrillingMethod : MonoBehaviour
     public enum MapState
     {
         Road,
-        Wall
+        Wall,
+        Start,
+        Goal
     }
 }
