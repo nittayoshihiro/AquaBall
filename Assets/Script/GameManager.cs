@@ -94,6 +94,13 @@ public class GameManager : MonoBehaviour
         m_timeState = TimeState.Stop;
     }
 
+    /// <summary>設定ボタン</summary>
+    public void SettingButton()
+    {
+        TimerStop();
+
+    }
+
     enum TimeState
     {
         /// <summary>タイムを加算</summary>

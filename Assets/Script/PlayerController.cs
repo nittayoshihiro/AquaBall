@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>重力をかける方向</summary>
     Vector3 m_vector3 = new Vector3();
     /// <summary>コントローラーを示す</summary>
-    Controller m_controller = Controller.Joystick;
+    public ControllerState m_controller = ControllerState.Joystick;
     /// <summary>FloatJoystick</summary>
     FloatingJoystick m_joystick;
     /// <summary>ジョイスティックゲームオブジェクト</summary>
@@ -36,13 +36,13 @@ public class PlayerController : MonoBehaviour
         {
             switch (m_controller)
             {
-                case Controller.Joystick:
+                case ControllerState.Joystick:
                     //ステックテスト
                     m_vector3.x = m_joystick.Horizontal;
                     m_vector3.z = m_joystick.Vertical;
                     m_vector3.y = -1.0f;
                     break;
-                case Controller.Acceleration:
+                case ControllerState.Acceleration:
                     //キー入力を検知ベクトルを設定
                     m_vector3.x = Input.GetAxis("Horizontal");
                     m_vector3.z = Input.GetAxis("Vertical");
@@ -60,13 +60,13 @@ public class PlayerController : MonoBehaviour
         {
             switch (m_controller)
             {
-                case Controller.Joystick:
+                case ControllerState.Joystick:
                     //キー入力を検知ベクトルを設定
                     m_vector3.x = m_joystick.Horizontal;
                     m_vector3.z = m_joystick.Vertical;
                     m_vector3.y = -1.0f;
                     break;
-                case Controller.Acceleration:
+                case ControllerState.Acceleration:
                     //加速度センサーの入力をUnity空間の軸にマッピングする(座標軸が異なるため)
                     m_vector3.x = Input.acceleration.x;
                     m_vector3.z = Input.acceleration.y;
@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
     public void Joystick()
     {
         m_joystickGameObject.SetActive(true);
-        m_controller = Controller.Joystick;
+        m_controller = ControllerState.Joystick;
     }
 
     /// <summary>
@@ -94,13 +94,13 @@ public class PlayerController : MonoBehaviour
     public void Acceleration()
     {
         m_joystickGameObject.SetActive(false);
-        m_controller = Controller.Acceleration;
+        m_controller = ControllerState.Acceleration;
     }
 
     /// <summary>
     /// 操作種類
     /// </summary>
-    enum Controller
+    public enum ControllerState
     {
         Joystick,
         Acceleration
