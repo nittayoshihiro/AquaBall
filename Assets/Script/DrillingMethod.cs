@@ -28,10 +28,21 @@ public class DrillingMethod : MonoBehaviour
     [SerializeField] bool m_debug = true;
     [SerializeField] int m_startx, m_startz;
 
+    public void TestMapping()
+    {
+        //子オブジェクトを削除（マップ）
+        foreach (Transform child in gameObject.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        GameObject player = GameObject.Find("Player(Clone)");
+        Destroy(player);
+        CreateMap(m_mapName, m_mapFloor);
+    }
+
     // Start is called before the first frame update
     public void MappingStart()
     {
-        //CreateFloorMap(Drilling(m_mapSize, 1, 1), SetUpMapData(m_mapSize), m_mapName, 1);
         CreateMap(m_mapName, m_mapFloor);
     }
 
