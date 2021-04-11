@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// スタートキューブの当たり判定用
+/// </summary>
 public class StartCubeController : MonoBehaviour
 {
     GameManager m_gamemanager;
@@ -11,11 +14,13 @@ public class StartCubeController : MonoBehaviour
         m_gamemanager = GameObject.FindObjectOfType<GameManager>();
     }
 
+    /// <summary>プレイヤーがスタートから離れたら</summary>
+    /// <param name="other"></param>
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.tag == "Player")
         {
-            m_gamemanager.PlayerStart();
+            m_gamemanager.TimerStart();
         }
     }
 }

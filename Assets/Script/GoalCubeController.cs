@@ -20,7 +20,7 @@ public class GoalCubeController : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            m_gamemanager.TimerStop();
+            m_gamemanager.EndOfGame();
         }
     }
 }

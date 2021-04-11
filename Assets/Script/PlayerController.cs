@@ -19,7 +19,8 @@ public class PlayerController : MonoBehaviour
     GameObject m_joystickGameObject;
     /// <summary>重力規模</summary>
     [SerializeField] float m_gravityScale = 1.0f;
-
+    /// <summary>デバッグonoff</summary>
+    [SerializeField] bool m_debug = true;
 
     // Start is called before the first frame update
     void Start()
@@ -76,7 +77,10 @@ public class PlayerController : MonoBehaviour
         }
         //シーンの重力を入力ベクトルの方向に合わせて変化させる
         Physics.gravity = m_gravity * m_vector3.normalized * m_gravityScale;
-        Debug.Log(Physics.gravity);
+        if (m_debug)
+        {
+            Debug.Log(Physics.gravity);
+        }
     }
 
     /// <summary>
