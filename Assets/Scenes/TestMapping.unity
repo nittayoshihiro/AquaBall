@@ -428,7 +428,7 @@ MonoBehaviour:
   m_mapName: map
   m_mapSize: 9
   m_mapFloor: 0
-  m_cubePrefab: {fileID: 4291123582557137899, guid: 74aab2f3812464f3ea3c07921353e005,
+  m_cubePrefab: {fileID: 1438678596881278, guid: f276b25713fa744d49652857ce54d1d9,
     type: 3}
   m_startCubePrefab: {fileID: 4592170507612827542, guid: f02f995773c2f418abefd45423b77091,
     type: 3}
@@ -438,8 +438,6 @@ MonoBehaviour:
   m_playerPrefab: {fileID: 3847981350064048005, guid: 9f04cb84d61564e7891e269210cfee2a,
     type: 3}
   m_debug: 1
-  m_startx: 0
-  m_startz: 0
 --- !u!4 &1429960625
 Transform:
   m_ObjectHideFlags: 0

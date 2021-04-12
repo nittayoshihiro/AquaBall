@@ -26,7 +26,8 @@ public class DrillingMethod : MonoBehaviour
     [SerializeField] GameObject m_playerPrefab;
     /// <summary>デバッグonoff</summary>
     [SerializeField] bool m_debug = true;
-    [SerializeField] int m_startx, m_startz;
+    //[SerializeField] int m_startx, m_startz;
+    int m_goalx, m_goalz;
 
     public void TestMapping()
     {
@@ -72,7 +73,7 @@ public class DrillingMethod : MonoBehaviour
             //穴掘り
             mapdata[startx, starty] = MapState.Start;//スタート
             DigHole(mapdata, startx, starty);
-            //ReversDigHole(mapdata, m_goalx, m_goaly);
+            //ReversDigHole(mapdata, m_goalx, m_goalz);
             return mapdata;
         }
         else
@@ -152,13 +153,13 @@ public class DrillingMethod : MonoBehaviour
         else
         {
             //デバッグでするため変数に入れる
-            int a = ramDirection[Random.Range(1, ramDirection.Length)];
+            int ramTestDirection = ramDirection[Random.Range(1, ramDirection.Length)];
             if (m_debug)
             {
-                Debug.Log(a);
+                Debug.Log(ramTestDirection);
             }
             //ランダムで進行方向を決める
-            switch (a)
+            switch (ramTestDirection)
             {
                 case 1:
                     mapdata[nowposx, nowposz + 1] = MapState.Road;
@@ -278,6 +279,8 @@ public class DrillingMethod : MonoBehaviour
                         if (m_mapFloor == maxfloor)
                         {
                             Instantiate(m_goalCubePrefab, new Vector3(x - m_mapSize / 2, maxfloor, z - m_mapSize / 2), Quaternion.identity).gameObject.transform.parent = mapObject.transform;
+                            m_goalx = x;
+                            m_goalz = z;
                         }
                         else
                         {
