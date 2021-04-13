@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-
 /// <summary>
 /// マップ自動生成、穴掘り法
 /// </summary>
@@ -89,7 +88,7 @@ public class DrillingMethod : MonoBehaviour
             int[] ramDirection = new int[] { 0 };
             if (mapPos.z + 2 < m_mapSize)
             {
-                Debug.Log(mapPos.z + 2);
+                //Debug.Log(mapPos.z + 2);
                 if (m_mapdata[mapPos.x, mapPos.z + 2] == MapState.Wall)
                 {
                     System.Array.Resize(ref ramDirection, ramDirection.Length + 1);
@@ -98,7 +97,7 @@ public class DrillingMethod : MonoBehaviour
             }
             if (0 < mapPos.z - 2)
             {
-                Debug.Log(mapPos.z - 2);
+                //Debug.Log(mapPos.z - 2);
                 if (m_mapdata[mapPos.x, mapPos.z - 2] == MapState.Wall)
                 {
                     System.Array.Resize(ref ramDirection, ramDirection.Length + 1);
@@ -107,7 +106,7 @@ public class DrillingMethod : MonoBehaviour
             }
             if (0 < mapPos.x - 2)
             {
-                Debug.Log(mapPos.x - 2);
+                //Debug.Log(mapPos.x - 2);
                 if (m_mapdata[mapPos.x - 2, mapPos.z] == MapState.Wall)
                 {
                     System.Array.Resize(ref ramDirection, ramDirection.Length + 1);
@@ -116,7 +115,7 @@ public class DrillingMethod : MonoBehaviour
             }
             if (mapPos.x + 2 < m_mapSize)
             {
-                Debug.Log(mapPos.x + 2);
+                //Debug.Log(mapPos.x + 2);
                 if (m_mapdata[mapPos.x + 2, mapPos.z] == MapState.Wall)
                 {
                     System.Array.Resize(ref ramDirection, ramDirection.Length + 1);
@@ -136,22 +135,22 @@ public class DrillingMethod : MonoBehaviour
                     case 1:
                         m_mapdata[mapPos.x, ++mapPos.z] = MapState.Road;
                         m_mapdata[mapPos.x, ++mapPos.z] = MapState.Road;
-                        m_startPos.Add(new Vector3Int(mapPos.x, 0, mapPos.z + 2));
+                        m_startPos.Add(new Vector3Int(mapPos.x, 0, mapPos.z));
                         break;
                     case 2:
                         m_mapdata[mapPos.x, --mapPos.z] = MapState.Road;
                         m_mapdata[mapPos.x, --mapPos.z] = MapState.Road;
-                        m_startPos.Add(new Vector3Int(mapPos.x, 0, mapPos.z - 2));
+                        m_startPos.Add(new Vector3Int(mapPos.x, 0, mapPos.z));
                         break;
                     case 3:
                         m_mapdata[--mapPos.x, mapPos.z] = MapState.Road;
                         m_mapdata[--mapPos.x, mapPos.z] = MapState.Road;
-                        m_startPos.Add(new Vector3Int(mapPos.x - 2, 0, mapPos.z));
+                        m_startPos.Add(new Vector3Int(mapPos.x, 0, mapPos.z));
                         break;
                     case 4:
                         m_mapdata[++mapPos.x, mapPos.z] = MapState.Road;
                         m_mapdata[++mapPos.x, mapPos.z] = MapState.Road;
-                        m_startPos.Add(new Vector3Int(mapPos.x + 2, 0, mapPos.z));
+                        m_startPos.Add(new Vector3Int(mapPos.x, 0, mapPos.z));
                         break;
                 }
             }
@@ -163,10 +162,14 @@ public class DrillingMethod : MonoBehaviour
     /// </summary>
     private void ReStartDigHole()
     {
-        int ramIndex = Random.Range(0, m_startPos.Count);
-        Vector3Int startPos = m_startPos[ramIndex];
-        m_startPos.RemoveAt(ramIndex);
-        DigHole(startPos);
+        if (m_startPos.Count != 0)
+        {
+            int ramIndex = Random.Range(0, m_startPos.Count);
+            //Debug.Log(ramIndex + " " + m_startPos.Count);
+            Vector3Int startPos = m_startPos[ramIndex];
+            m_startPos.RemoveAt(ramIndex);
+            DigHole(startPos);
+        }
     }
 
     /// <summary>
