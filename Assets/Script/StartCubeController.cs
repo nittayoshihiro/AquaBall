@@ -20,7 +20,7 @@ public class StartCubeController : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            m_gamemanager.TimerStart();
+            //m_gamemanager.TimerStart();
         }
     }
 }

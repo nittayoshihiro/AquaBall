@@ -49,7 +49,6 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void Standby()
     {
-        m_drillingMethod.MappingStart();
         m_gameState = GameState.Initialized;
         m_startButton.SetActive(false);
     }
