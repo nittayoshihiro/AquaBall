@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// マップを生成する
@@ -28,14 +29,17 @@ public class MazeMapping : MonoBehaviour
     [SerializeField] GameObject m_playerPrefab = null;
     /// <summary>デバッグonoff</summary>
     [SerializeField] bool m_debug = true;
+    /// <summary>テキストに入力された数字</summary>
+    [SerializeField] Text m_numdertext = default;
     /// <summary>穴掘りメソッド</summary>
     DrillingMethod m_drillingMethod = null;
     List<GameObject> m_maps = new List<GameObject>();
 
-    /// <summary>マップを消します</summary>
+    /// <summary>マップを消します(プレイヤーも) </summary>
     public void DeletMap()
     {
         m_maps.ForEach(map => Destroy(map));
+        Destroy(GameObject.Find("Player(Clone)"));
     }
 
     /// <summary>迷路マップ</summary>
@@ -46,6 +50,18 @@ public class MazeMapping : MonoBehaviour
         m_drillingMethod.FlatMapping();
         //マップデータを入れる
         m_maps.Add(m_drillingMethod.GetMapObject);
+    }
+
+    /// <summary>マップサイズを変更します</summary>
+    public void MapResize()
+    {
+        if (int.TryParse(m_numdertext.text, out int result))
+        {
+            if (5 < result && result % 2 == 1)
+            {
+                m_mapSize = result;
+            }
+        }
     }
 
     /// <summary>階層マップ生成</summary>

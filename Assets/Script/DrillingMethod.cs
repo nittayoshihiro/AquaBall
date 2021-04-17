@@ -14,7 +14,7 @@ public class DrillingMethod : MonoBehaviour
     [Header("マップサイズ※５以上の奇数を入力")]
     int m_mapSize;
     /// <summary>作成する階層</summary>
-    int m_mapFloor;
+    int m_mapFloor = 0;
     GameObject m_mapObject = null;
     /// <summary>キューブプレハブ</summary>
     GameObject m_cubePrefab = null;
@@ -87,6 +87,7 @@ public class DrillingMethod : MonoBehaviour
         m_middleCubePrefab = middleCubePrefab;
         m_goalCubePrefab = goalCubePrefab;
         m_playerPrefab = playerPrefab;
+ 
     }
 
     /// <summary>平らな迷路マップ</summary>
@@ -94,6 +95,7 @@ public class DrillingMethod : MonoBehaviour
     {
         ResetMapData();
         m_mapdata[1, 1] = MapState.Start;
+        m_goalpoint = true;
         DigHole(new Vector3Int(1, 0, 1));
         CreateFloorMap(m_mapdata, m_floormapdata, m_mapName, 0);
     }
@@ -189,6 +191,11 @@ public class DrillingMethod : MonoBehaviour
             //掘り進められなかったら
             if (ramDirection.Length == 1)
             {
+                if (m_goalpoint)
+                {
+                    m_mapdata[mapPos.x, mapPos.z] = MapState.Goal;
+                    m_goalpoint = false;
+                }
                 ReStartDigHole();
                 break;
             }
@@ -265,7 +272,7 @@ public class DrillingMethod : MonoBehaviour
                         {
                             cube = Instantiate(m_startCubePrefab, new Vector3(x - m_mapSize / 2, maxfloor, z - m_mapSize / 2), Quaternion.identity);
                             cube.transform.parent = m_mapObject.transform;
-                            //Instantiate(m_playerPrefab, new Vector3(x - m_mapSize / 2, maxfloor, z - m_mapSize / 2), Quaternion.identity);
+                            Instantiate(m_playerPrefab, new Vector3(x - m_mapSize / 2, maxfloor, z - m_mapSize / 2), Quaternion.identity);
                         }
                         else
                         {
