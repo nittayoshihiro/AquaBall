@@ -1,6 +1,12 @@
 # AquaBall
 アクアボールをイメージしたゲーム
 
+使用パッケージ
+
+Shader Graph
+
+Universal RP (URP) 
+
 使用アセット
 
 [playerのトーコ素材](https://unity-chan.com/download/releaseNote.php?id=SD_Toko)
