@@ -7,20 +7,33 @@ using UnityEngine;
 /// </summary>
 public class StartCubeController : MonoBehaviour
 {
-    GameManager m_gamemanager;
+    /// <summary>スタートキューブから出た際のメソッド型</summary>
+    delegate void StartCubeExitEvent();
+    /// <summary>スタートキューブから出た際のメソッド</summary>
+    private StartCubeExitEvent m_startCubeExitEvent;
+    /// <summary>ゲームマネージャー</summary>
+    TimeManager m_timemanager;
+
     // Start is called before the first frame update
     void Start()
     {
-        m_gamemanager = GameObject.FindObjectOfType<GameManager>();
+        //ゲームマネージャーがあった場合タイムメソッドを入れる
+        m_timemanager = GameObject.FindObjectOfType<TimeManager>();
+        if (m_timemanager)
+        {
+            m_startCubeExitEvent = new StartCubeExitEvent(m_timemanager.TimerStart);
+        }
     }
 
-    /// <summary>プレイヤーがスタートから離れたら</summary>
+    /// <summary>スタートキューブから出た時</summary>
     /// <param name="other"></param>
     private void OnTriggerExit(Collider other)
     {
+        //プレイヤーがスタートから離れたら
         if (other.gameObject.tag == "Player")
         {
-            //m_gamemanager.TimerStart();
+            //メソッドがある時呼び出す
+            m_startCubeExitEvent?.Invoke();
         }
     }
 }

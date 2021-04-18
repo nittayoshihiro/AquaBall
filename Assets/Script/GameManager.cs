@@ -2,28 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
+[RequireComponent(typeof(TimeManager))]
 public class GameManager : MonoBehaviour
 {
+    /// <summary>ゲームマネージャーの処理</summary>
+    [SerializeField] private UnityEvent m_gameManagerEvent = new UnityEvent();
     /// <summary>ゲームの状況</summary>
     GameState m_gameState = GameState.NonInitialized;
-    /// <summary>タイムの状況</summary>
-    TimeState m_timeState = TimeState.Stop;
-    /// <summary>クリアタイムを計測</summary>
-    float m_clearTime = 0f;
-    /// <summary>穴掘りクラス</summary>
-    DrillingMethod m_drillingMethod = null;
-    /// <summary>タイム表示のテキスト</summary>
-    [SerializeField] Text m_timerText = null;
     /// <summary>スタートボタン</summary>
     [SerializeField] GameObject m_startButton;
     /// <summary>終了ボタン</summary>
     [SerializeField] GameObject m_finishButton;
+    TimeManager m_timeManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        m_drillingMethod = GetComponent<DrillingMethod>();
+        //m_startExitPlayerEvent.Invoke();
+        m_timeManager = GetComponent<TimeManager>();
     }
 
     // Update is called once per frame
@@ -37,7 +35,7 @@ public class GameManager : MonoBehaviour
                 GameSetUp();
                 break;
             case GameState.InGame:
-                TimeManager();
+                m_timeManager.TimeNow();
                 break;
             case GameState.Pause:
                 break;
@@ -62,45 +60,10 @@ public class GameManager : MonoBehaviour
         m_gameState = GameState.InGame;
     }
 
-    /// <summary>
-    /// タイム管理
-    /// </summary>
-    void TimeManager()
-    {
-        switch (m_timeState)
-        {
-            case TimeState.Addition:
-                m_clearTime += Time.deltaTime;
-                break;
-            case TimeState.Stop:
-                break;
-            case TimeState.Reset:
-                m_clearTime = 0f;
-                break;
-        }
-        //テキストにタイムを表示させる
-        if (m_timerText)
-        {
-            m_timerText.text = string.Format("{0:000.00}", m_clearTime);
-        }
-    }
-
-    /// <summary>タイムを加算する</summary>
-    public void TimerStart()
-    {
-        m_timeState = TimeState.Addition;
-    }
-
-    /// <summary>タイムを停止</summary>
-    public void TimerStop()
-    {
-        m_timeState = TimeState.Stop;
-    }
-
     /// <summary>設定ボタン</summary>
     public void SettingButton()
     {
-        TimerStop();
+        m_timeManager.TimerStop();
         m_gameState = GameState.Pause;
         GameObject game = GameObject.Find("Player(Clone)");
         Rigidbody playerrd = game.GetComponent<Rigidbody>();
@@ -110,14 +73,14 @@ public class GameManager : MonoBehaviour
     /// <summary>閉じるボタン</summary>
     public void ExitButton()
     {
-        TimerStart();
+        m_timeManager.TimerStart();
         m_gameState = GameState.InGame;
     }
 
     /// <summary>ゲーム終了</summary>
     public void EndOfGame()
     {
-        TimerStop();
+        m_timeManager.TimerStop();
         m_gameState = GameState.NonInitialized;
         m_finishButton.SetActive(true);
     }
@@ -136,17 +99,9 @@ public class GameManager : MonoBehaviour
         m_startButton.SetActive(true);
     }
 
-
-    enum TimeState
-    {
-        /// <summary>タイムを加算</summary>
-        Addition,
-        /// <summary>タイムを止める</summary>
-        Stop,
-        /// <summary>タイムをリセット</summary>
-        Reset
-    }
-
+    /// <summary>
+    /// ゲーム状態
+    /// </summary>
     enum GameState
     {
         /// <summary>ゲーム初期化前</summary>
