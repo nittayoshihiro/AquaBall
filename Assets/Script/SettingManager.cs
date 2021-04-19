@@ -5,13 +5,15 @@ using UnityEngine.UI;
 
 public class SettingManager : MonoBehaviour
 {
+    /// <summary>ゲームマネージャー</summary>
+    GameManager m_gameManager;
     /// <summary>設定画面のオブジェクト</summary>
     [SerializeField] GameObject m_settingPnel;
     /// <summary>コントロールボタン</summary>
     [SerializeField] GameObject m_button;
     /// <summary>ボタンテキスト</summary>
     [SerializeField] Text m_buttonText;
-    
+
     /// <summary>
     /// 設定ボタン
     /// </summary>
@@ -33,20 +35,24 @@ public class SettingManager : MonoBehaviour
     /// </summary>
     public void ControllerButton()
     {
-        //プレイヤーを探して操作を変更
-        GameObject player = GameObject.Find("Player(Clone)");
-        PlayerController playerController = player.GetComponent<PlayerController>();
-
-        switch (playerController.m_controller)
+        //ゲーム中
+        if (m_gameManager.GetGameState == GameManager.GameState.InGame)
         {
-            case PlayerController.ControllerState.Joystick:
-                playerController.Acceleration();
-                m_buttonText.text = "changeAcceleration";
-                break;
-            case PlayerController.ControllerState.Acceleration:
-                playerController.Joystick();
-                m_buttonText.text = "changeJoystick";
-                break;
+            //プレイヤーを探して操作を変更
+            GameObject player = GameObject.Find("Player(Clone)");
+            PlayerController playerController = player.GetComponent<PlayerController>();
+            switch (playerController.m_controller)
+            {
+                case PlayerController.ControllerState.Joystick:
+                    playerController.Acceleration();
+                    m_buttonText.text = "changeAcceleration";
+                    break;
+                case PlayerController.ControllerState.Acceleration:
+                    playerController.Joystick();
+                    m_buttonText.text = "changeJoystick";
+                    break;
+            }
+
         }
     }
 }

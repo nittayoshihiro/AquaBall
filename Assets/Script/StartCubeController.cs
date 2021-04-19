@@ -1,16 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// スタートキューブの当たり判定用
 /// </summary>
 public class StartCubeController : MonoBehaviour
 {
-    /// <summary>スタートキューブから出た際のメソッド型</summary>
-    delegate void StartCubeExitEvent();
-    /// <summary>スタートキューブから出た際のメソッド</summary>
-    private StartCubeExitEvent m_startCubeExitEvent;
+    /// <summary>スタートキューブから出た際の処理</summary>
+    [SerializeField] private UnityEvent m_startCubeEvent = new UnityEvent();
     /// <summary>ゲームマネージャー</summary>
     TimeManager m_timemanager;
 
@@ -21,7 +20,7 @@ public class StartCubeController : MonoBehaviour
         m_timemanager = GameObject.FindObjectOfType<TimeManager>();
         if (m_timemanager)
         {
-            m_startCubeExitEvent = new StartCubeExitEvent(m_timemanager.TimerStart);
+            m_startCubeEvent.AddListener(m_timemanager.TimerStart);
         }
     }
 
@@ -32,8 +31,7 @@ public class StartCubeController : MonoBehaviour
         //プレイヤーがスタートから離れたら
         if (other.gameObject.tag == "Player")
         {
-            //メソッドがある時呼び出す
-            m_startCubeExitEvent?.Invoke();
+            m_startCubeEvent?.Invoke();
         }
     }
 }

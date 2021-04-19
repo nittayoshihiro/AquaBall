@@ -7,10 +7,8 @@ using UnityEngine.Events;
 [RequireComponent(typeof(TimeManager))]
 public class GameManager : MonoBehaviour
 {
-    /// <summary>ゲームマネージャーの処理</summary>
-    [SerializeField] private UnityEvent m_gameManagerEvent = new UnityEvent();
     /// <summary>ゲームの状況</summary>
-    GameState m_gameState = GameState.NonInitialized;
+    private GameState m_gameState = GameState.NonInitialized;
     /// <summary>スタートボタン</summary>
     [SerializeField] GameObject m_startButton;
     /// <summary>終了ボタン</summary>
@@ -20,7 +18,6 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //m_startExitPlayerEvent.Invoke();
         m_timeManager = GetComponent<TimeManager>();
     }
 
@@ -43,28 +40,36 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
+    /// ゲームステータス変更
+    /// </summary>
+    /// <param name="gameState">変更したいステータス</param>
+    public void ChangeGameState(GameState gameState)
+    {
+        m_gameState = gameState;
+    }
+
+    /// <summary>
     /// ゲーム準備
     /// </summary>
     public void Standby()
     {
-        m_gameState = GameState.Initialized;
+        ChangeGameState(GameState.Initialized);
         m_startButton.SetActive(false);
     }
-
 
     /// <summary>
     /// ゲームをセットアップする
     /// </summary>
     public void GameSetUp()
     {
-        m_gameState = GameState.InGame;
+        ChangeGameState(GameState.InGame);
     }
 
     /// <summary>設定ボタン</summary>
     public void SettingButton()
     {
         m_timeManager.TimerStop();
-        m_gameState = GameState.Pause;
+        ChangeGameState(GameState.Pause);
         GameObject game = GameObject.Find("Player(Clone)");
         Rigidbody playerrd = game.GetComponent<Rigidbody>();
         playerrd.isKinematic = true;
@@ -74,7 +79,7 @@ public class GameManager : MonoBehaviour
     public void ExitButton()
     {
         m_timeManager.TimerStart();
-        m_gameState = GameState.InGame;
+        ChangeGameState(GameState.InGame);
     }
 
     /// <summary>ゲーム終了</summary>
@@ -99,10 +104,12 @@ public class GameManager : MonoBehaviour
         m_startButton.SetActive(true);
     }
 
+    public GameState GetGameState => m_gameState;
+
     /// <summary>
     /// ゲーム状態
     /// </summary>
-    enum GameState
+    public enum GameState
     {
         /// <summary>ゲーム初期化前</summary>
         NonInitialized,
