@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
     {
         m_timeManager.TimerStop();
         ChangeGameState(GameState.Pause);
-        GameObject game = GameObject.Find("Player(Clone)");
+        GameObject game = GameObject.FindGameObjectWithTag("Player");
         Rigidbody playerrd = game.GetComponent<Rigidbody>();
         playerrd.isKinematic = true;
     }
@@ -98,7 +98,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-        GameObject player = GameObject.Find("Player(Clone)");
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
         Destroy(player);
         m_finishButton.SetActive(false);
         m_startButton.SetActive(true);

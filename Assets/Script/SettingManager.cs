@@ -39,8 +39,7 @@ public class SettingManager : MonoBehaviour
         if (m_gameManager.GetGameState == GameManager.GameState.InGame)
         {
             //プレイヤーを探して操作を変更
-            GameObject player = GameObject.Find("Player(Clone)");
-            PlayerController playerController = player.GetComponent<PlayerController>();
+            PlayerController playerController = GameObject.FindObjectOfType<PlayerController>();
             switch (playerController.m_controller)
             {
                 case PlayerController.ControllerState.Joystick:
