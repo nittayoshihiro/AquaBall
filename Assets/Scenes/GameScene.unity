@@ -277,6 +277,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 141000970}
   m_CullTransparentMesh: 0
+--- !u!1 &247691840 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8170153791668043269, guid: 0d230cc8be529a542a08cb878ab14b18,
+    type: 3}
+  m_PrefabInstance: {fileID: 919460298}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &257494674
 GameObject:
   m_ObjectHideFlags: 0
@@ -1569,6 +1575,7 @@ GameObject:
   - component: {fileID: 1274682822}
   - component: {fileID: 1274682820}
   - component: {fileID: 1274682821}
+  - component: {fileID: 1274682823}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1645,6 +1652,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_startButton: {fileID: 1561963368}
   m_finishButton: {fileID: 1534387656}
+--- !u!114 &1274682823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1274682818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b3ef1323d2e14012bb9a4f693f718d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_joystickGameObject: {fileID: 247691840}
+  m_gravityScale: 2
+  m_debug: 1
 --- !u!1 &1430190196
 GameObject:
   m_ObjectHideFlags: 0
@@ -1799,7 +1821,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d48ef56fba6d434a87663b06b398391, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_settingPnel: {fileID: 1451595049}
+  m_settingPanel: {fileID: 0}
   m_button: {fileID: 1561963368}
   m_buttonText: {fileID: 369895766}
 --- !u!1 &1451595049

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(TimeManager))]
+[RequireComponent(typeof(GravityController))]
 public class GameManager : MonoBehaviour
 {
     /// <summary>ゲームの状況</summary>
@@ -14,11 +15,15 @@ public class GameManager : MonoBehaviour
     /// <summary>終了ボタン</summary>
     [SerializeField] GameObject m_finishButton;
     TimeManager m_timeManager;
+    GravityController m_gravityController;
+    SettingManager m_settingManager;
 
     // Start is called before the first frame update
     void Start()
     {
         m_timeManager = GetComponent<TimeManager>();
+        m_gravityController = GetComponent<GravityController>();
+        m_settingManager = FindObjectOfType<SettingManager>();
     }
 
     // Update is called once per frame
@@ -32,6 +37,7 @@ public class GameManager : MonoBehaviour
                 GameSetUp();
                 break;
             case GameState.InGame:
+                m_gravityController.ControllerButton();
                 m_timeManager.TimeNow();
                 break;
             case GameState.Pause:
@@ -53,6 +59,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void Standby()
     {
+        m_gravityController.ChangeGravityController(m_settingManager.GetSettingLoad);
         ChangeGameState(GameState.Initialized);
         m_startButton.SetActive(false);
     }

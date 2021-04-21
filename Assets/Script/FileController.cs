@@ -9,33 +9,45 @@ using System.IO;//ファイルシステムを使用するため
 public class FileController
 {
     /// <summary>
+    /// ファイルを作ります。
+    /// </summary>
+    /// <param name="Path"></param>
+    public static void CreateFile(string textName)
+    {
+        Debug.Log($"ファイル '{GetFilePath(textName)}' を作ります");
+        File.Create(GetFilePath(textName));
+
+    }
+
+    /// <summary>
     /// ファイルセーブ （上書き）
     /// </summary>
-    /// <param name="fileName">ファイル名前</param>
-    public static void FileSave(string fileName, string text)
+    /// <param name="textName">ファイル名前</param>
+    public static void TextSave(string textName, string text)
     {
         //指定されたファイルが存在しない場合、このパラメーターは無効であり、コンストラクターは新しいファイルを作成します。
-        using (var writer = new StreamWriter(GetFilePath(fileName), append: false))
+        using (var writer = new StreamWriter(GetFilePath(textName), append: false))
         {
             writer.Write(text);
         }
     }
 
     /// <summary>
-    /// ファイルテキスト
+    /// ファイル読み取る
     /// </summary>
-    /// <param name="fileName">ファイル名前</param>
+    /// <param name="textName">ファイル名前</param>
     /// <returns>ファイルの中身</returns>
-    public static string LoadText(string fileName)
+    public static string TextLoad(string textName)
     {
         string text = "";
         try
         {
-            using (var reader = new StreamReader(GetFilePath(fileName)))
+            using (var reader = new StreamReader(GetFilePath(textName)))
             {
                 while (!reader.EndOfStream)//テキストを行単位で読み込む　ReadToEndメソッドはまとめて読み込むのでメモリー消費が大きくなる　独習c＃p195 参照
                 {
                     string line = reader.ReadLine();
+                    Debug.Log(line);
                     //上書きの際元のもて見れるようにするため(消しても保存先は影響されない)
                     text += line;
                 }
@@ -54,10 +66,10 @@ public class FileController
     /// ファイルパスを返します。
     /// </summary>
     /// <returns>ファイルパス</returns>
-    private static string GetFilePath(string fileName)
+    public static string GetFilePath(string textName)
     {
         // Unity の場合はどこでもファイルの読み書きができるわけではないことに注意。Application.persistentDataPath を使って「読み書きできるところ」でファイル操作をすること。
-        string filePath = Application.persistentDataPath + "/" + (fileName == "" ? Application.productName : fileName) + ".txt";
+        string filePath = Application.persistentDataPath + "/" + (textName == "" ? Application.productName : textName) + ".json";
         return filePath;
     }
 }

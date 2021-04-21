@@ -1,25 +1,65 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 設定用クラス
+/// </summary>
 public class SettingManager : MonoBehaviour
 {
     /// <summary>ゲームマネージャー</summary>
     GameManager m_gameManager;
     /// <summary>設定画面のオブジェクト</summary>
-    [SerializeField] GameObject m_settingPnel;
+    [SerializeField] GameObject m_settingPanel;
     /// <summary>コントロールボタン</summary>
     [SerializeField] GameObject m_button;
     /// <summary>ボタンテキスト</summary>
     [SerializeField] Text m_buttonText;
+    /// <summary>テキスト名前をSettingとする</summary>
+    static string m_textName = "Setting";
+    /// <summary>設定の形式変数</summary>
+    SettingData m_settingData = new SettingData();
+
+    /// <summary>
+    ///データ初期化する前
+    /// </summary>
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    static void BeforInit()
+    {
+        try
+        {
+            using (var reader = new StreamReader(FileController.GetFilePath(m_textName))) { }
+        }
+        catch (FileNotFoundException ex)
+        {
+            Debug.Log($"{ex}のファイルが見つかりませんでした。ファイルを作ります");
+            FileController.CreateFile(m_textName);
+        }
+    }
+
+    /// <summary>
+    ///データ初期化する後
+    /// </summary>
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    static void AfterInit()
+    {
+ 
+        //TODO　ファイルの内容がない時に、以下を実行したいです
+        SettingData settingData = new SettingData();
+        settingData.ControllerState = GravityController.ControllerState.Joystick;
+        Debug.Log(JsonUtility.ToJson(settingData));
+        FileController.TextSave(m_textName, JsonUtility.ToJson(settingData));
+    }
 
     /// <summary>
     /// 設定ボタン
     /// </summary>
     public void SettingButton()
     {
-        m_settingPnel.SetActive(true);
+        m_settingPanel.SetActive(true);
     }
 
     /// <summary>
@@ -27,31 +67,38 @@ public class SettingManager : MonoBehaviour
     /// </summary>
     public void CloseButton()
     {
-        m_settingPnel.SetActive(false);
+        m_settingPanel.SetActive(false);
     }
 
     /// <summary>
-    /// コントロールボタン
+    /// 設定セーブ
     /// </summary>
-    public void ControllerButton()
+    /// <param name="settingData"></param>
+    public void SettingSave(SettingData settingData)
     {
-        //ゲーム中
-        if (m_gameManager.GetGameState == GameManager.GameState.InGame)
-        {
-            //プレイヤーを探して操作を変更
-            PlayerController playerController = GameObject.FindObjectOfType<PlayerController>();
-            switch (playerController.m_controller)
-            {
-                case PlayerController.ControllerState.Joystick:
-                    playerController.Acceleration();
-                    m_buttonText.text = "changeAcceleration";
-                    break;
-                case PlayerController.ControllerState.Acceleration:
-                    playerController.Joystick();
-                    m_buttonText.text = "changeJoystick";
-                    break;
-            }
+        FileController.TextSave(m_textName, JsonUtility.ToJson(settingData));
+    }
 
+    /// <summary>
+    /// 設定ロードして返す
+    /// </summary>
+    public SettingData GetSettingLoad
+    {
+        get
+        {
+            SettingData settingData = JsonUtility.FromJson<SettingData>(FileController.TextLoad(m_textName));
+            Debug.Log(settingData);
+            return settingData;
         }
     }
+}
+
+/// <summary>
+/// 設定データ(Json)形式
+/// </summary>
+[Serializable]
+public class SettingData
+{
+    /// <summary>操作種類</summary>
+    public GravityController.ControllerState ControllerState = GravityController.ControllerState.Joystick;
 }

@@ -39,7 +39,7 @@ public class MazeMapping : MonoBehaviour
     public void DeletMap()
     {
         m_maps.ForEach(map => Destroy(map));
-        Destroy(GameObject.Find("Player(Clone)"));
+        Destroy(GameObject.FindGameObjectWithTag("Player"));
     }
 
     /// <summary>迷路マップ</summary>
