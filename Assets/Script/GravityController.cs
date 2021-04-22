@@ -19,8 +19,15 @@ public class GravityController : MonoBehaviour
     [SerializeField] float m_gravityScale = 1.0f;
     /// <summary>デバッグonoff</summary>
     [SerializeField] bool m_debug = true;
+    SettingManager m_settingManager = null;
     /// <summary>設定を受け取る</summary>
     SettingData m_settingData = null;
+
+    private void Start()
+    {
+        m_joystick = m_joystickGameObject.GetComponent<FloatingJoystick>();
+        m_settingManager = GetComponent<SettingManager>();
+    }
 
     /// <summary>
     /// コントロールボタン
@@ -93,7 +100,9 @@ public class GravityController : MonoBehaviour
     public void Joystick()
     {
         m_joystickGameObject.SetActive(true);
+        m_settingData = m_settingManager.GetSettingLoad;
         m_settingData.ControllerState = ControllerState.Joystick;
+        m_settingManager.SettingSave(m_settingData);
     }
 
     /// <summary>
@@ -102,7 +111,9 @@ public class GravityController : MonoBehaviour
     public void Acceleration()
     {
         m_joystickGameObject.SetActive(false);
+        m_settingData = m_settingManager.GetSettingLoad;
         m_settingData.ControllerState = ControllerState.Acceleration;
+        m_settingManager.SettingSave(m_settingData);
     }
 
     /// <summary>

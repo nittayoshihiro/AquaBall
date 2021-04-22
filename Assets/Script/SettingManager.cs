@@ -29,6 +29,7 @@ public class SettingManager : MonoBehaviour
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void BeforInit()
     {
+        //データがある時
         try
         {
             using (var reader = new StreamReader(FileController.GetFilePath(m_textName))) { }
@@ -36,22 +37,11 @@ public class SettingManager : MonoBehaviour
         catch (FileNotFoundException ex)
         {
             Debug.Log($"{ex}のファイルが見つかりませんでした。ファイルを作ります");
-            FileController.CreateFile(m_textName);
+            SettingData settingData = new SettingData();
+            settingData.ControllerState = GravityController.ControllerState.Joystick;
+            Debug.Log(JsonUtility.ToJson(settingData));
+            FileController.TextSave(m_textName, JsonUtility.ToJson(settingData));
         }
-    }
-
-    /// <summary>
-    ///データ初期化する後
-    /// </summary>
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    static void AfterInit()
-    {
- 
-        //TODO　ファイルの内容がない時に、以下を実行したいです
-        SettingData settingData = new SettingData();
-        settingData.ControllerState = GravityController.ControllerState.Joystick;
-        Debug.Log(JsonUtility.ToJson(settingData));
-        FileController.TextSave(m_textName, JsonUtility.ToJson(settingData));
     }
 
     /// <summary>
