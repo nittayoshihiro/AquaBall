@@ -28,10 +28,10 @@ public class DrillingMethod : MonoBehaviour
     GameObject m_goalCubePrefab = null;
     /// <summary>プレイヤープレハブ</summary>
     GameObject m_playerPrefab = null;
-    /// <summary>デバッグonoff</summary>
-    bool m_debug = true;
+    /// <summary>デバッグ用</summary>
+    [SerializeField] bool m_debug = false;
     /// <summary>マップデータ</summary>
-    private MapState[,] m_mapdata;
+    private MapState[,] m_mapdata = null;
     /// <summary>床マップデータ</summary>
     private MapState[,] m_floormapdata;
     /// <summary>ゴールを作成するかの判定</summary>
@@ -59,7 +59,11 @@ public class DrillingMethod : MonoBehaviour
 
         //マップ生成
         ResetMapData();
-        Debug.Log(m_mapdata.GetLength(0) + " " + m_mapdata.GetLength(1));
+        if (m_debug)
+        {
+            Debug.Log(m_mapdata.GetLength(0) + " " + m_mapdata.GetLength(1));
+        }
+        
         m_mapdata[1, 1] = MapState.Start;
         DigHole(new Vector3Int(1, 0, 1));
         CreateFloorMap(m_mapdata, m_floormapdata, m_mapName, m_mapFloor);

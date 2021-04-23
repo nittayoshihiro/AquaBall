@@ -16,14 +16,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject m_finishButton;
     TimeManager m_timeManager;
     GravityController m_gravityController;
-    SettingManager m_settingManager;
 
     // Start is called before the first frame update
     void Start()
     {
         m_timeManager = GetComponent<TimeManager>();
         m_gravityController = GetComponent<GravityController>();
-        m_settingManager = FindObjectOfType<SettingManager>();
     }
 
     // Update is called once per frame
@@ -37,7 +35,7 @@ public class GameManager : MonoBehaviour
                 GameSetUp();
                 break;
             case GameState.InGame:
-                m_gravityController.ControllerButton();
+                m_gravityController.Controller();
                 m_timeManager.TimeNow();
                 break;
             case GameState.Pause:
@@ -59,7 +57,6 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void Standby()
     {
-        m_gravityController.ChangeGravityController(m_settingManager.GetSettingLoad);
         ChangeGameState(GameState.Initialized);
         m_startButton.SetActive(false);
     }
@@ -111,7 +108,7 @@ public class GameManager : MonoBehaviour
         m_startButton.SetActive(true);
     }
 
-    public GameState GetGameState => m_gameState;
+    public GameState GetGameState  => m_gameState;
 
     /// <summary>
     /// ゲーム状態

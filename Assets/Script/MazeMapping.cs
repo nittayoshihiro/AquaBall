@@ -27,8 +27,6 @@ public class MazeMapping : MonoBehaviour
     [SerializeField] GameObject m_goalCubePrefab = null;
     /// <summary>プレイヤープレハブ</summary>
     [SerializeField] GameObject m_playerPrefab = null;
-    /// <summary>デバッグonoff</summary>
-    [SerializeField] bool m_debug = true;
     /// <summary>テキストに入力された数字</summary>
     [SerializeField] Text m_numdertext = default;
     /// <summary>穴掘りメソッド</summary>
@@ -45,6 +43,7 @@ public class MazeMapping : MonoBehaviour
     /// <summary>迷路マップ</summary>
     public void CreateMap()
     {
+        //TODODrillingMethodにMonoBehaviourを継承しているのをnewしてはいけない（結果　コンストラクタはつかえない？）
         m_drillingMethod = new DrillingMethod(m_mapName, m_mapSize, m_cubePrefab, m_floorCubePrefab, m_startCubePrefab,
                     m_middleCubePrefab, m_goalCubePrefab, m_playerPrefab);
         m_drillingMethod.FlatMapping();

@@ -12,32 +12,32 @@ public class GravityController : MonoBehaviour
     /// <summary>重力をかける方向</summary>
     Vector3 m_vector3 = new Vector3();
     /// <summary>ジョイスティックゲームオブジェクト</summary>
-    [SerializeField] GameObject m_joystickGameObject;
+    [SerializeField] GameObject m_joystickGameObject =null;
     /// <summary>FloatJoystick</summary>
     FloatingJoystick m_joystick;
     /// <summary>重力規模</summary>
     [SerializeField] float m_gravityScale = 1.0f;
     /// <summary>デバッグonoff</summary>
     [SerializeField] bool m_debug = true;
+    /// <summary>設定</summary>
     SettingManager m_settingManager = null;
-    /// <summary>設定を受け取る</summary>
-    SettingData m_settingData = null;
 
     private void Start()
     {
         m_joystick = m_joystickGameObject.GetComponent<FloatingJoystick>();
-        m_settingManager = GetComponent<SettingManager>();
+        m_settingManager = FindObjectOfType<SettingManager>();
+        Debug.Log(m_settingManager);
     }
 
     /// <summary>
-    /// コントロールボタン
+    /// コントロール
     /// </summary>
-    public void ControllerButton()
+    public void Controller()
     {
         //unityエディター上で動かしている場合
         if (Application.isEditor)
         {
-            switch (m_settingData.ControllerState)
+            switch (m_settingManager.GetGravityController)
             {
                 case ControllerState.Joystick:
                     //ステックテスト
@@ -61,7 +61,7 @@ public class GravityController : MonoBehaviour
         //スマホデバッグ用
         else
         {
-            switch (m_settingData.ControllerState)
+            switch (m_settingManager.GetGravityController)
             {
                 case ControllerState.Joystick:
                     //キー入力を検知ベクトルを設定
@@ -86,12 +86,19 @@ public class GravityController : MonoBehaviour
     }
 
     /// <summary>
-    /// 設定を受け取り反映させる
+    /// 重力操作変更ボタン
     /// </summary>
-    /// <param name="settingData"></param>
-    public void ChangeGravityController(SettingData settingData)
+    public void GravityControllerButton()
     {
-        m_settingData = settingData;
+        switch (m_settingManager.GetGravityController)
+        {
+            case ControllerState.Joystick:
+                Acceleration();
+                break;
+            case ControllerState.Acceleration:
+                Joystick();
+                break;
+        }
     }
 
     /// <summary>
@@ -100,9 +107,7 @@ public class GravityController : MonoBehaviour
     public void Joystick()
     {
         m_joystickGameObject.SetActive(true);
-        m_settingData = m_settingManager.GetSettingLoad;
-        m_settingData.ControllerState = ControllerState.Joystick;
-        m_settingManager.SettingSave(m_settingData);
+        m_settingManager.ChangeGravityController(ControllerState.Joystick);
     }
 
     /// <summary>
@@ -111,9 +116,7 @@ public class GravityController : MonoBehaviour
     public void Acceleration()
     {
         m_joystickGameObject.SetActive(false);
-        m_settingData = m_settingManager.GetSettingLoad;
-        m_settingData.ControllerState = ControllerState.Acceleration;
-        m_settingManager.SettingSave(m_settingData);
+        m_settingManager.ChangeGravityController(ControllerState.Acceleration);
     }
 
     /// <summary>
