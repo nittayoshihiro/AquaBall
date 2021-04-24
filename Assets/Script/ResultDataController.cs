@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ResultDataController : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class ResultDataController : MonoBehaviour
     static string m_textName = "ResultData";
     /// <summary>リザルトデータ</summary>
     ResultData m_resultData = null;
+    /// <summary>ランキングテキスト</summary>
+    [SerializeField] Text m_rankingText = null;
 
     /// <summary>
     ///データ初期化する前
@@ -17,14 +20,10 @@ public class ResultDataController : MonoBehaviour
     [RuntimeInitializeOnLoadMethod()]
     static void BeforInit()
     {
-        //データがあったら、
-        try
+        //データがあったら
+        if (!File.Exists(FileController.GetFilePath(m_textName)))
         {
-            using (var reader = new StreamReader(FileController.GetFilePath(m_textName))) { }
-        }
-        catch (FileNotFoundException ex)
-        {
-            Debug.Log($"{ex}のファイルが見つかりませんでした。ファイルを作ります");
+            Debug.Log($"{FileController.GetFilePath(m_textName)}のファイルが見つかりませんでした。ファイルを作ります");
             ResultData resultData = new ResultData(0, 0, 0);
             FileController.TextSave(m_textName, JsonUtility.ToJson(resultData));
         }
@@ -37,10 +36,31 @@ public class ResultDataController : MonoBehaviour
     }
 
     /// <summary>
+    /// ランキングテキストを更新表示します
+    /// </summary>
+    public void RankingText(float resultTime)
+    {
+        RankingReload(resultTime);
+        m_rankingText.text = RankingFormat;
+    }
+
+    /// <summary>
+    /// ランキングテキスト形式を返します。
+    /// </summary>
+    private string RankingFormat
+    {
+        get
+        {
+            string text = "１位" + m_resultData.firstPlace + "\n２位" + m_resultData.secondPlace + "\n３位" + m_resultData.thirdPlace;
+            return text;
+        }
+    }
+
+    /// <summary>
     /// ランキングを変更する
     /// </summary>
     /// /// <param name="resultTime">結果タイム</param>
-    public void RankingReload(float resultTime)
+    private void RankingReload(float resultTime)
     {
         if (resultTime >= m_resultData.firstPlace)
         {

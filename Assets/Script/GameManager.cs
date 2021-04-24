@@ -11,17 +11,21 @@ public class GameManager : MonoBehaviour
     /// <summary>ゲームの状況</summary>
     private GameState m_gameState = GameState.NonInitialized;
     /// <summary>スタートボタン</summary>
-    [SerializeField] GameObject m_startButton;
+    [SerializeField] GameObject m_startButton = null;
     /// <summary>終了ボタン</summary>
-    [SerializeField] GameObject m_finishButton;
-    TimeManager m_timeManager;
-    GravityController m_gravityController;
+    [SerializeField] GameObject m_finishButton = null;
+    /// <summary>タイム管理</summary>
+    TimeManager m_timeManager = null;
+    /// <summary>重力コントロール</summary>
+    GravityController m_gravityController = null;
+    ResultDataController m_resultDataController = null;
 
     // Start is called before the first frame update
     void Start()
     {
         m_timeManager = GetComponent<TimeManager>();
         m_gravityController = GetComponent<GravityController>();
+        m_resultDataController = FindObjectOfType<ResultDataController>();
     }
 
     // Update is called once per frame
@@ -40,8 +44,12 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.Pause:
                 break;
+            case GameState.Result:
+                m_resultDataController.RankingText(m_timeManager.GetTime);
+                break;
         }
     }
+
 
     /// <summary>
     /// ゲームステータス変更
@@ -69,28 +77,11 @@ public class GameManager : MonoBehaviour
         ChangeGameState(GameState.InGame);
     }
 
-    /// <summary>設定ボタン</summary>
-    public void SettingButton()
-    {
-        m_timeManager.TimerStop();
-        ChangeGameState(GameState.Pause);
-        GameObject game = GameObject.FindGameObjectWithTag("Player");
-        Rigidbody playerrd = game.GetComponent<Rigidbody>();
-        playerrd.isKinematic = true;
-    }
-
-    /// <summary>閉じるボタン</summary>
-    public void ExitButton()
-    {
-        m_timeManager.TimerStart();
-        ChangeGameState(GameState.InGame);
-    }
-
     /// <summary>ゲーム終了</summary>
     public void EndOfGame()
     {
         m_timeManager.TimerStop();
-        m_gameState = GameState.NonInitialized;
+        ChangeGameState(GameState.NonInitialized);
         m_finishButton.SetActive(true);
     }
 
@@ -108,7 +99,7 @@ public class GameManager : MonoBehaviour
         m_startButton.SetActive(true);
     }
 
-    public GameState GetGameState  => m_gameState;
+    public GameState GetGameState => m_gameState;
 
     /// <summary>
     /// ゲーム状態
@@ -122,6 +113,8 @@ public class GameManager : MonoBehaviour
         /// <summary>ゲーム中</summary>
         InGame,
         /// <summary>ポーズ中</summary>
-        Pause
+        Pause,
+        /// <summary>結果</summary>
+        Result
     }
 }

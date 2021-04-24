@@ -8,7 +8,7 @@ public class TimeManager : MonoBehaviour
     /// <summary>タイムの状況</summary>
     TimeState m_timeState = TimeState.Stop;
     /// <summary>クリアタイムを計測</summary>
-    float m_clearTime = 0f;
+    private float m_clearTime = 0f;
     /// <summary>タイム表示のテキスト</summary>
     [SerializeField] Text m_timerText = null;
 
@@ -41,6 +41,15 @@ public class TimeManager : MonoBehaviour
         m_timeState = TimeState.Addition;
     }
 
+    /// <summary>タイムが加算されてた際加算する</summary>
+    public void TimerRestart()
+    {
+        if (m_clearTime > 0f)
+        {
+            m_timeState = TimeState.Addition;
+        }
+    }
+
     /// <summary>タイムを停止</summary>
     public void TimerStop()
     {
@@ -52,6 +61,8 @@ public class TimeManager : MonoBehaviour
     {
         m_clearTime = 0f;
     }
+
+    public float GetTime => m_clearTime;
 
     /// <summary>
     /// タイム状態

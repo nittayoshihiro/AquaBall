@@ -14,14 +14,12 @@ public class SettingManager : MonoBehaviour
     GameManager m_gameManager;
     /// <summary>設定画面のオブジェクト</summary>
     [SerializeField] GameObject m_settingPanel = null;
-    /// <summary>コントロールボタン</summary>
-    [SerializeField] GameObject m_button = null;
-    /// <summary>ボタンテキスト</summary>
-    [SerializeField] Text m_buttonText;
     /// <summary>テキスト名前をSettingとする</summary>
     static string m_textName = "Setting";
     /// <summary>設定の形式変数</summary>
     SettingData m_settingData = null;
+    /// <summary></summary>
+    private bool m_seepRd = false;
 
     /// <summary>
     ///データ初期化する前
@@ -29,14 +27,10 @@ public class SettingManager : MonoBehaviour
     [RuntimeInitializeOnLoadMethod()]
     static void BeforInit()
     {
-        //データがあったら、
-        try
+        //データがある
+        if (!File.Exists(FileController.GetFilePath(m_textName)))
         {
-            using (var reader = new StreamReader(FileController.GetFilePath(m_textName))) { }
-        }
-        catch (FileNotFoundException ex)
-        {
-            Debug.Log($"{ex}のファイルが見つかりませんでした。ファイルを作ります");
+            Debug.Log($"{FileController.GetFilePath(m_textName)}のファイルが見つかりませんでした。ファイルを作ります");
             SettingData settingData = new SettingData(GravityController.ControllerState.Joystick);
             Debug.Log(JsonUtility.ToJson(settingData));
             FileController.TextSave(m_textName, JsonUtility.ToJson(settingData));
@@ -49,12 +43,46 @@ public class SettingManager : MonoBehaviour
     }
 
     /// <summary>
+    /// プレイヤーの重力を変更（重力を受けるか受けないか）
+    /// </summary>
+    /// <param name="useGravity">重力の変更値</param>
+    private void PlayerGravity(bool useGravity)
+    {
+        m_seepRd = useGravity;
+        //プレイヤーを探して
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player)
+        {
+            Rigidbody playerRd = player.GetComponent<Rigidbody>();
+            StartCoroutine(RigidbodySleep(playerRd));
+        }
+    }
+
+    /// <summary>
+    /// Rigidbodyを止めます
+    /// </summary>
+    /// <param name="rb">止めたいrigidbody</param>
+    public IEnumerator RigidbodySleep(Rigidbody rb)
+    {
+        while (true)
+        {
+            rb.Sleep();
+            if (m_seepRd)
+            {
+                yield break;
+            }
+            yield return null;
+        }
+    }
+
+    /// <summary>
     /// 設定ボタン
     /// </summary>
     public void SettingButton()
     {
         m_settingPanel.SetActive(true);
         m_settingData = GetSettingLoad;
+        PlayerGravity(false);
     }
 
     /// <summary>
@@ -73,6 +101,7 @@ public class SettingManager : MonoBehaviour
     {
         m_settingPanel.SetActive(false);
         SettingSave(m_settingData);
+        PlayerGravity(true);
     }
 
     /// <summary>
@@ -83,7 +112,6 @@ public class SettingManager : MonoBehaviour
     {
         FileController.TextSave(m_textName, JsonUtility.ToJson(settingData));
     }
-
     /// <summary>
     /// 設定ロードして返す
     /// </summary>
@@ -97,7 +125,7 @@ public class SettingManager : MonoBehaviour
         }
     }
 
-    public GravityController.ControllerState GetGravityController  => m_settingData.controllerState;
+    public GravityController.ControllerState GetGravityController => m_settingData.controllerState;
 }
 
 /// <summary>

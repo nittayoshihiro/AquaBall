@@ -35,12 +35,12 @@ public class DrillingMethod : MonoBehaviour
     /// <summary>床マップデータ</summary>
     private MapState[,] m_floormapdata;
     /// <summary>ゴールを作成するかの判定</summary>
-    private bool m_goalpoint;
+    private bool m_goalpoint = false;
     /// <summary>ゴールポジション</summary>
-    private Vector3Int m_goalposition;
+    private Vector3Int m_goalposition = new Vector3Int();
     /// <summary>掘り進める候補</summary>
     private List<Vector3Int> m_startPos = null;
-    //[SerializeField] int m_startx, m_startz;
+    /// <summary>ゴール保存</summary>
     int m_goalx, m_goalz;
 
     /// <summary>
@@ -63,7 +63,7 @@ public class DrillingMethod : MonoBehaviour
         {
             Debug.Log(m_mapdata.GetLength(0) + " " + m_mapdata.GetLength(1));
         }
-        
+
         m_mapdata[1, 1] = MapState.Start;
         DigHole(new Vector3Int(1, 0, 1));
         CreateFloorMap(m_mapdata, m_floormapdata, m_mapName, m_mapFloor);
@@ -91,7 +91,7 @@ public class DrillingMethod : MonoBehaviour
         m_middleCubePrefab = middleCubePrefab;
         m_goalCubePrefab = goalCubePrefab;
         m_playerPrefab = playerPrefab;
- 
+
     }
 
     /// <summary>平らな迷路マップ</summary>
