@@ -27,7 +27,7 @@ public class SettingManager : MonoBehaviour
     [RuntimeInitializeOnLoadMethod()]
     static void BeforInit()
     {
-        //データがある
+        //データがなかったら作成する
         if (!File.Exists(FileController.GetFilePath(m_textName)))
         {
             Debug.Log($"{FileController.GetFilePath(m_textName)}のファイルが見つかりませんでした。ファイルを作ります");
@@ -112,6 +112,21 @@ public class SettingManager : MonoBehaviour
     {
         FileController.TextSave(m_textName, JsonUtility.ToJson(settingData));
     }
+
+    /// <summary>
+    /// データを消します（その後アプリを落とします）
+    /// </summary>
+    public void DataErase()
+    {
+        File.Delete(FileController.GetFilePath(m_textName));
+        File.Delete(FileController.GetFilePath(ResultDataController.m_textName));
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#elif UNITY_ANDROID
+        Application.Quit();
+#endif
+    }
+
     /// <summary>
     /// 設定ロードして返す
     /// </summary>

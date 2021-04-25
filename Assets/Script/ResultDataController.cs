@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class ResultDataController : MonoBehaviour
 {
     /// <summary>データ名前</summary>
-    static string m_textName = "ResultData";
+    public static string m_textName = "ResultData";
     /// <summary>リザルトデータ</summary>
     ResultData m_resultData = null;
     /// <summary>ランキングテキスト</summary>

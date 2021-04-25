@@ -12,7 +12,7 @@ public class GravityController : MonoBehaviour
     /// <summary>重力をかける方向</summary>
     Vector3 m_vector3 = new Vector3();
     /// <summary>ジョイスティックゲームオブジェクト</summary>
-    [SerializeField] GameObject m_joystickGameObject =null;
+    [SerializeField] GameObject m_joystickGameObject = null;
     /// <summary>FloatJoystick</summary>
     FloatingJoystick m_joystick;
     /// <summary>重力規模</summary>
@@ -21,9 +21,13 @@ public class GravityController : MonoBehaviour
     [SerializeField] bool m_debug = true;
     /// <summary>設定</summary>
     SettingManager m_settingManager = null;
+    GameManager m_gameManager = null;
+    /// <summary>ゲーム状態</summary>
+    GameManager.GameState m_gameState;
 
     private void Start()
     {
+        m_gameManager = GetComponent<GameManager>();
         m_joystick = m_joystickGameObject.GetComponent<FloatingJoystick>();
         m_settingManager = FindObjectOfType<SettingManager>();
         Debug.Log(m_settingManager);
@@ -34,49 +38,46 @@ public class GravityController : MonoBehaviour
     /// </summary>
     public void Controller()
     {
+#if UNITY_EDITOR
         //unityエディター上で動かしている場合
-        if (Application.isEditor)
+        switch (m_settingManager.GetGravityController)
         {
-            switch (m_settingManager.GetGravityController)
-            {
-                case ControllerState.Joystick:
-                    //ステックテスト
-                    m_vector3.x = m_joystick.Horizontal;
-                    m_vector3.z = m_joystick.Vertical;
-                    m_vector3.y = -1.0f;
-                    break;
-                case ControllerState.Acceleration:
-                    //キー入力を検知ベクトルを設定
-                    m_vector3.x = Input.GetAxis("Horizontal");
-                    m_vector3.z = Input.GetAxis("Vertical");
-                    m_vector3.y = -1.0f;
-                    //テスト用
-                    if (Input.GetKey("z"))
-                    {
-                        m_vector3.y = 0f;
-                    }
-                    break;
-            }
+            case ControllerState.Joystick:
+                //ステックテスト
+                m_vector3.x = m_joystick.Horizontal;
+                m_vector3.z = m_joystick.Vertical;
+                m_vector3.y = -1.0f;
+                break;
+            case ControllerState.Acceleration:
+                //キー入力を検知ベクトルを設定
+                m_vector3.x = Input.GetAxis("Horizontal");
+                m_vector3.z = Input.GetAxis("Vertical");
+                m_vector3.y = -1.0f;
+                //テスト用
+                if (Input.GetKey("z"))
+                {
+                    m_vector3.y = 0f;
+                }
+                break;
         }
+#elif UNITY_ANDROID
         //スマホデバッグ用
-        else
+        switch (m_settingManager.GetGravityController)
         {
-            switch (m_settingManager.GetGravityController)
-            {
-                case ControllerState.Joystick:
-                    //キー入力を検知ベクトルを設定
-                    m_vector3.x = m_joystick.Horizontal;
-                    m_vector3.z = m_joystick.Vertical;
-                    m_vector3.y = -1.0f;
-                    break;
-                case ControllerState.Acceleration:
-                    //加速度センサーの入力をUnity空間の軸にマッピングする(座標軸が異なるため)
-                    m_vector3.x = Input.acceleration.x;
-                    m_vector3.z = Input.acceleration.y;
-                    m_vector3.y = -1.0f;//マップ外に行かないようにする
-                    break;
-            }
+            case ControllerState.Joystick:
+                //キー入力を検知ベクトルを設定
+                m_vector3.x = m_joystick.Horizontal;
+                m_vector3.z = m_joystick.Vertical;
+                m_vector3.y = -1.0f;
+                break;
+            case ControllerState.Acceleration:
+                //加速度センサーの入力をUnity空間の軸にマッピングする(座標軸が異なるため)
+                m_vector3.x = Input.acceleration.x;
+                m_vector3.z = Input.acceleration.y;
+                m_vector3.y = -1.0f;//マップ外に行かないようにする
+                break;
         }
+#endif
         //シーンの重力を入力ベクトルの方向に合わせて変化させる
         Physics.gravity = m_gravity * m_vector3.normalized * m_gravityScale;
         if (m_debug)
@@ -102,11 +103,27 @@ public class GravityController : MonoBehaviour
     }
 
     /// <summary>
+    /// ジョイスティックを可能にするか判定
+    /// </summary>
+    public void JoystickJudgment()
+    {
+        m_gameState = m_gameManager.GetGameState;
+        if (m_gameState ==GameManager.GameState.InGame)
+        {
+            m_joystickGameObject.SetActive(true);
+        }
+        else
+        {
+            m_joystickGameObject.SetActive(false);
+        }
+    }
+
+    /// <summary>
     /// コントロールをジョイスティックにする
     /// </summary>
     public void Joystick()
     {
-        m_joystickGameObject.SetActive(true);
+        JoystickJudgment();
         m_settingManager.ChangeGravityController(ControllerState.Joystick);
     }
 

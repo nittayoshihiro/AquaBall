@@ -74,6 +74,7 @@ public class GameManager : MonoBehaviour
     public void GameSetUp()
     {
         ChangeGameState(GameState.InGame);
+        m_gravityController.JoystickJudgment();
     }
 
     /// <summary>ゲーム終了</summary>
@@ -81,6 +82,7 @@ public class GameManager : MonoBehaviour
     {
         m_timeManager.TimerStop();
         ChangeGameState(GameState.NonInitialized);
+        m_gravityController.JoystickJudgment();
         m_resultPanel.SetActive(true);
         m_resultDataController.RankingText(m_timeManager.GetTime);
     }
@@ -116,8 +118,6 @@ public class GameManager : MonoBehaviour
     }
 
     public GameState GetGameState => m_gameState;
-
-
 
     /// <summary>
     /// ゲーム状態
