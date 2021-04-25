@@ -13,6 +13,8 @@ public class ResultDataController : MonoBehaviour
     ResultData m_resultData = null;
     /// <summary>ランキングテキスト</summary>
     [SerializeField] Text m_rankingText = null;
+    /// <summary>プレイヤーの順位</summary>
+    private int m_playerRankig = 0;//0:順位外　1:１位　2:２位　3:３位
 
     /// <summary>
     ///データ初期化する前
@@ -24,7 +26,7 @@ public class ResultDataController : MonoBehaviour
         if (!File.Exists(FileController.GetFilePath(m_textName)))
         {
             Debug.Log($"{FileController.GetFilePath(m_textName)}のファイルが見つかりませんでした。ファイルを作ります");
-            ResultData resultData = new ResultData(0, 0, 0);
+            ResultData resultData = new ResultData(999, 999, 999);
             FileController.TextSave(m_textName, JsonUtility.ToJson(resultData));
         }
     }
@@ -45,13 +47,36 @@ public class ResultDataController : MonoBehaviour
     }
 
     /// <summary>
-    /// ランキングテキスト形式を返します。
+    /// ランキングテキスト形式を返します。(順位によって色が変わります)
     /// </summary>
     private string RankingFormat
     {
         get
         {
-            string text = "１位" + m_resultData.firstPlace + "\n２位" + m_resultData.secondPlace + "\n３位" + m_resultData.thirdPlace;
+            string text = null;
+            switch (m_playerRankig)
+            {
+                case 0:
+                    text = "１位" + string.Format("{0:000.00}", m_resultData.firstPlace)
+               + "\n２位" + string.Format("{0:000.00}", m_resultData.secondPlace)
+               + "\n３位" + string.Format("{0:000.00}", m_resultData.thirdPlace);
+                    break;
+                case 1:
+                    text = "<color=#ffff00>１位" + string.Format("{0:000.00}", m_resultData.firstPlace) + "</color>"
+               + "\n２位" + string.Format("{0:000.00}", m_resultData.secondPlace)
+               + "\n３位" + string.Format("{0:000.00}", m_resultData.thirdPlace);
+                    break;
+                case 2:
+                    text = "１位" + string.Format("{0:000.00}", m_resultData.firstPlace)
+               + "\n<color=#ffff00>２位" + string.Format("{0:000.00}", m_resultData.secondPlace) + "</color>"
+               + "\n３位" + string.Format("{0:000.00}", m_resultData.thirdPlace);
+                    break;
+                case 3:
+                    text = "１位" + string.Format("{0:000.00}", m_resultData.firstPlace)
+               + "\n２位" + string.Format("{0:000.00}", m_resultData.secondPlace)
+               + "\n<color=#ffff00>３位" + string.Format("{0:000.00}", m_resultData.thirdPlace) + "</color>";
+                    break;
+            }
             return text;
         }
     }
@@ -62,23 +87,30 @@ public class ResultDataController : MonoBehaviour
     /// /// <param name="resultTime">結果タイム</param>
     private void RankingReload(float resultTime)
     {
-        if (resultTime >= m_resultData.firstPlace)
+        if (resultTime <= m_resultData.firstPlace)
         {
             m_resultData.thirdPlace = m_resultData.secondPlace;
             m_resultData.secondPlace = m_resultData.firstPlace;
             m_resultData.firstPlace = resultTime;
             ResultSave(m_resultData);
+            m_playerRankig = 1;
         }
-        else if (resultTime >= m_resultData.secondPlace)
+        else if (resultTime <= m_resultData.secondPlace)
         {
             m_resultData.thirdPlace = m_resultData.secondPlace;
             m_resultData.secondPlace = resultTime;
             ResultSave(m_resultData);
+            m_playerRankig = 2;
         }
-        else if (resultTime >= m_resultData.thirdPlace)
+        else if (resultTime <= m_resultData.thirdPlace)
         {
             m_resultData.thirdPlace = resultTime;
             ResultSave(m_resultData);
+            m_playerRankig = 3;
+        }
+        else
+        {
+            m_playerRankig = 0;
         }
     }
 

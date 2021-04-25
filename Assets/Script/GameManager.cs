@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     private GameState m_gameState = GameState.NonInitialized;
     /// <summary>スタートボタン</summary>
     [SerializeField] GameObject m_startButton = null;
+    /// <summary>結果パネル</summary>
+    [SerializeField] GameObject m_resultPanel = null;
     /// <summary>終了ボタン</summary>
     [SerializeField] GameObject m_finishButton = null;
     /// <summary>タイム管理</summary>
@@ -43,9 +45,6 @@ public class GameManager : MonoBehaviour
                 m_timeManager.TimeNow();
                 break;
             case GameState.Pause:
-                break;
-            case GameState.Result:
-                m_resultDataController.RankingText(m_timeManager.GetTime);
                 break;
         }
     }
@@ -82,7 +81,14 @@ public class GameManager : MonoBehaviour
     {
         m_timeManager.TimerStop();
         ChangeGameState(GameState.NonInitialized);
-        m_finishButton.SetActive(true);
+        m_resultPanel.SetActive(true);
+        m_resultDataController.RankingText(m_timeManager.GetTime);
+    }
+
+    /// <summary>結果画面タップ</summary>
+    public void ResultPanelTap()
+    {
+        ChangeGameObjectSetActive(m_resultPanel,m_finishButton);
     }
 
     /// <summary>終了ボタン</summary>
@@ -95,11 +101,23 @@ public class GameManager : MonoBehaviour
         }
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Destroy(player);
-        m_finishButton.SetActive(false);
-        m_startButton.SetActive(true);
+        ChangeGameObjectSetActive(m_finishButton,m_startButton);
+    }
+
+    /// <summary>
+    /// ゲームオブジェクトのセットアクティブを変更
+    /// </summary>
+    /// <param name="falseGameObject">セットアクティブをfaleにしたいオブジェクト</param>
+    /// <param name="trueGameObject">セットアクティブをtrueにしたいオブジェクト</param>
+    public static void ChangeGameObjectSetActive(GameObject falseGameObject, GameObject trueGameObject)
+    {
+        falseGameObject.SetActive(false);
+        trueGameObject.SetActive(true);
     }
 
     public GameState GetGameState => m_gameState;
+
+
 
     /// <summary>
     /// ゲーム状態
@@ -114,7 +132,5 @@ public class GameManager : MonoBehaviour
         InGame,
         /// <summary>ポーズ中</summary>
         Pause,
-        /// <summary>結果</summary>
-        Result
     }
 }
