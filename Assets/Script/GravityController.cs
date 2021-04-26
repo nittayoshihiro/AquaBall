@@ -142,8 +142,8 @@ public class GravityController : MonoBehaviour
     /// </summary>
     public void Joystick()
     {
-        JoystickJudgment();
         m_settingManager.ChangeGravityController(ControllerState.Joystick);
+        JoystickJudgment();
         ControllerText();
     }
 
