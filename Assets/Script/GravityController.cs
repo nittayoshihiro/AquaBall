@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 重力の操作をします。
@@ -13,6 +14,8 @@ public class GravityController : MonoBehaviour
     Vector3 m_vector3 = new Vector3();
     /// <summary>ジョイスティックゲームオブジェクト</summary>
     [SerializeField] GameObject m_joystickGameObject = null;
+    /// <summary>コントローラー表示テキスト</summary>
+    [SerializeField] Text m_textController = null;
     /// <summary>FloatJoystick</summary>
     FloatingJoystick m_joystick;
     /// <summary>重力規模</summary>
@@ -103,12 +106,28 @@ public class GravityController : MonoBehaviour
     }
 
     /// <summary>
+    /// 設定されている状態を表示する
+    /// </summary>
+    public void ControllerText()
+    {
+        switch (m_settingManager.GetGravityController)
+        {
+            case ControllerState.Joystick:
+                m_textController.text = "Joystick";
+                break;
+            case ControllerState.Acceleration:
+                m_textController.text = "Acceleration";
+                break;
+        }
+    }
+
+    /// <summary>
     /// ジョイスティックを可能にするか判定
     /// </summary>
     public void JoystickJudgment()
     {
         m_gameState = m_gameManager.GetGameState;
-        if (m_gameState ==GameManager.GameState.InGame)
+        if (m_gameState == GameManager.GameState.InGame && m_settingManager.GetGravityController == ControllerState.Joystick)
         {
             m_joystickGameObject.SetActive(true);
         }
@@ -125,6 +144,7 @@ public class GravityController : MonoBehaviour
     {
         JoystickJudgment();
         m_settingManager.ChangeGravityController(ControllerState.Joystick);
+        ControllerText();
     }
 
     /// <summary>
@@ -134,6 +154,7 @@ public class GravityController : MonoBehaviour
     {
         m_joystickGameObject.SetActive(false);
         m_settingManager.ChangeGravityController(ControllerState.Acceleration);
+        ControllerText();
     }
 
     /// <summary>
