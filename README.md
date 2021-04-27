@@ -14,3 +14,5 @@ Universal RP (URP)
 [波のマテリアル素材](https://assetstore.unity.com/packages/2d/textures-materials/floors/five-seamless-tileable-ground-textures-57060)
 
 [ジョイステイックアセット](https://assetstore.unity.com/packages/tools/input-management/joystick-pack-107631)
+
+[アイコン UI](https://assetstore.unity.com/packages/2d/gui/icons/icons-ui-95116?locale=ja-JP)
