@@ -57,24 +57,24 @@ public class ResultDataController : MonoBehaviour
             switch (m_playerRankig)
             {
                 case 0:
-                    text = "１位" + string.Format("{0:000.00}", m_resultData.firstPlace)
-               + "\n２位" + string.Format("{0:000.00}", m_resultData.secondPlace)
-               + "\n３位" + string.Format("{0:000.00}", m_resultData.thirdPlace);
+                    text = "1 <size=50>st</size>" + string.Format("{0:000.00}", m_resultData.firstPlace)
+               + "\n2<size=50>nd</size>" + string.Format("{0:000.00}", m_resultData.secondPlace)
+               + "\n3<size=50>rd</size>" + string.Format("{0:000.00}", m_resultData.thirdPlace);
                     break;
                 case 1:
-                    text = "<color=#ffff00>１位" + string.Format("{0:000.00}", m_resultData.firstPlace) + "</color>"
-               + "\n２位" + string.Format("{0:000.00}", m_resultData.secondPlace)
-               + "\n３位" + string.Format("{0:000.00}", m_resultData.thirdPlace);
+                    text = "<color=#ffff00>1 <size=50>st</size>" + string.Format("{0:000.00}", m_resultData.firstPlace) + "</color>"
+               + "\n2<size=50>nd</size>" + string.Format("{0:000.00}", m_resultData.secondPlace)
+               + "\n3<size=50>rd</size>" + string.Format("{0:000.00}", m_resultData.thirdPlace);
                     break;
                 case 2:
-                    text = "１位" + string.Format("{0:000.00}", m_resultData.firstPlace)
-               + "\n<color=#ffff00>２位" + string.Format("{0:000.00}", m_resultData.secondPlace) + "</color>"
-               + "\n３位" + string.Format("{0:000.00}", m_resultData.thirdPlace);
+                    text = "1 <size=50>st</size>" + string.Format("{0:000.00}", m_resultData.firstPlace)
+               + "\n<color=#ffff00>2<size=50>nd</size>" + string.Format("{0:000.00}", m_resultData.secondPlace) + "</color>"
+               + "\n3<size=50>rd</size>" + string.Format("{0:000.00}", m_resultData.thirdPlace);
                     break;
                 case 3:
-                    text = "１位" + string.Format("{0:000.00}", m_resultData.firstPlace)
-               + "\n２位" + string.Format("{0:000.00}", m_resultData.secondPlace)
-               + "\n<color=#ffff00>３位" + string.Format("{0:000.00}", m_resultData.thirdPlace) + "</color>";
+                    text = "1 <size=50>st</size>" + string.Format("{0:000.00}", m_resultData.firstPlace)
+               + "\n2<size=50>nd</size>" + string.Format("{0:000.00}", m_resultData.secondPlace)
+               + "\n<color=#ffff00>3<size=50>rd</size>" + string.Format("{0:000.00}", m_resultData.thirdPlace) + "</color>";
                     break;
             }
             return text;
@@ -131,7 +131,6 @@ public class ResultDataController : MonoBehaviour
         get
         {
             ResultData resultData = JsonUtility.FromJson<ResultData>(FileController.TextLoad(m_textName));
-            Debug.Log(resultData);
             return resultData;
         }
     }

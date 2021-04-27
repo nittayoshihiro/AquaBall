@@ -22,6 +22,8 @@ public class GravityController : MonoBehaviour
     [SerializeField] float m_gravityScale = 1.0f;
     /// <summary>デバッグonoff</summary>
     [SerializeField] bool m_debug = true;
+    /// <summary>加速度の補強</summary>
+    private float m_strongAcceleration = 2.0f;
     /// <summary>設定</summary>
     SettingManager m_settingManager = null;
     GameManager m_gameManager = null;
@@ -33,7 +35,10 @@ public class GravityController : MonoBehaviour
         m_gameManager = GetComponent<GameManager>();
         m_joystick = m_joystickGameObject.GetComponent<FloatingJoystick>();
         m_settingManager = FindObjectOfType<SettingManager>();
-        Debug.Log(m_settingManager);
+        if (m_debug)
+        {
+            Debug.Log(m_settingManager);
+        }
     }
 
     /// <summary>
@@ -75,8 +80,8 @@ public class GravityController : MonoBehaviour
                 break;
             case ControllerState.Acceleration:
                 //加速度センサーの入力をUnity空間の軸にマッピングする(座標軸が異なるため)
-                m_vector3.x = Input.acceleration.x;
-                m_vector3.z = Input.acceleration.y;
+                m_vector3.x = Input.acceleration.x * m_strongAcceleration;
+                m_vector3.z = Input.acceleration.y * m_strongAcceleration;
                 m_vector3.y = -1.0f;//マップ外に行かないようにする
                 break;
         }

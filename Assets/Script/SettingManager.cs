@@ -135,7 +135,6 @@ public class SettingManager : MonoBehaviour
         get
         {
             SettingData settingData = JsonUtility.FromJson<SettingData>(FileController.TextLoad(m_textName));
-            Debug.Log(settingData);
             return settingData;
         }
     }

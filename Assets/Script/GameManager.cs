@@ -87,12 +87,6 @@ public class GameManager : MonoBehaviour
         m_resultDataController.RankingText(m_timeManager.GetTime);
     }
 
-    /// <summary>結果画面タップ</summary>
-    public void ResultPanelTap()
-    {
-        ChangeGameObjectSetActive(m_resultPanel,m_finishButton);
-    }
-
     /// <summary>終了ボタン</summary>
     public void FinshButton()
     {
@@ -103,7 +97,7 @@ public class GameManager : MonoBehaviour
         }
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Destroy(player);
-        ChangeGameObjectSetActive(m_finishButton,m_startButton);
+        ChangeGameObjectSetActive(m_resultPanel,m_startButton);
     }
 
     /// <summary>

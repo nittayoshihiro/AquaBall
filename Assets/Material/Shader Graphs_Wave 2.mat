@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_Wave
+  m_Name: Shader Graphs_Wave 2
   m_Shader: {fileID: -6465566751694194690, guid: 91492622d62f9462aa68fec84d8a8465,
     type: 3}
   m_ShaderKeywords: 
@@ -30,4 +30,4 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats: []
     m_Colors:
-    - Vector2_239738B8: {r: 10, g: 20, b: 0, a: 0}
+    - Vector2_239738B8: {r: 1, g: 1, b: 0, a: 0}

@@ -16,7 +16,6 @@ public class FileController
     {
         Debug.Log($"ファイル '{GetFilePath(textName)}' を作ります");
         File.Create(GetFilePath(textName));
-
     }
 
     /// <summary>
@@ -47,7 +46,6 @@ public class FileController
                 while (!reader.EndOfStream)//テキストを行単位で読み込む　ReadToEndメソッドはまとめて読み込むのでメモリー消費が大きくなる　独習c＃p195 参照
                 {
                     string line = reader.ReadLine();
-                    Debug.Log(line);
                     //上書きの際元のもて見れるようにするため(消しても保存先は影響されない)
                     text += line;
                 }
