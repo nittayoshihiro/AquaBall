@@ -7,6 +7,10 @@ Shader Graph
 
 Universal RP (URP) 
 
+## 使用フォント
+
+[フォント](https://befonts.com/oligopoly-typeface.html)
+
 ## 使用アセット
 
 [playerのトーコ素材](https://unity-chan.com/download/releaseNote.php?id=SD_Toko)
