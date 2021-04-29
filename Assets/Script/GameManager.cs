@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     private GameState m_gameState = GameState.NonInitialized;
     /// <summary>スタートスクリーン</summary>
     [SerializeField] GameObject m_startScreen= null;
+    /// <summary>タイマーテキストオブジェクト</summary>
+    [SerializeField] GameObject m_timerText= null;
     /// <summary>結果パネル</summary>
     [SerializeField] GameObject m_resultPanel = null;
     /// <summary>終了ボタン</summary>
@@ -64,6 +66,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void Standby()
     {
+        m_gravityController.ResetGravity();
         ChangeGameState(GameState.Initialized);
         m_startScreen.SetActive(false);
     }
@@ -74,12 +77,14 @@ public class GameManager : MonoBehaviour
     public void GameSetUp()
     {
         ChangeGameState(GameState.InGame);
+        m_timerText.SetActive(true);
         m_gravityController.JoystickJudgment();
     }
 
     /// <summary>ゲーム終了</summary>
     public void EndOfGame()
     {
+        m_timerText.SetActive(false);
         m_timeManager.TimerStop();
         ChangeGameState(GameState.NonInitialized);
         m_gravityController.JoystickJudgment();

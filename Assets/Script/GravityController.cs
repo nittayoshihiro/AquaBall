@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
@@ -17,7 +18,7 @@ public class GravityController : MonoBehaviour
     /// <summary>コントローラー表示テキスト</summary>
     [SerializeField] Text m_textController = null;
     /// <summary>FloatJoystick</summary>
-    FloatingJoystick m_joystick;
+    FloatingJoystick m_joystick = null;
     /// <summary>重力規模</summary>
     [SerializeField] float m_gravityScale = 1.0f;
     /// <summary>デバッグonoff</summary>
@@ -138,6 +139,7 @@ public class GravityController : MonoBehaviour
         }
         else
         {
+            m_joystick.Reset();
             m_joystickGameObject.SetActive(false);
         }
     }
@@ -157,9 +159,18 @@ public class GravityController : MonoBehaviour
     /// </summary>
     public void Acceleration()
     {
+        m_joystick.Reset();
         m_joystickGameObject.SetActive(false);
         m_settingManager.ChangeGravityController(ControllerState.Acceleration);
         ControllerText();
+    }
+
+    /// <summary>
+    /// 重力初期化
+    /// </summary>
+    public void ResetGravity()
+    {
+        Physics.gravity = m_gravity * new Vector3(0, 1, 0).normalized * m_gravityScale;
     }
 
     /// <summary>
