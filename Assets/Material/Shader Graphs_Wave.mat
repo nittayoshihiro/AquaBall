@@ -30,4 +30,4 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats: []
     m_Colors:
-    - Vector2_239738B8: {r: 10, g: 20, b: 0, a: 0}
+    - Vector2_239738B8: {r: 15, g: 25, b: 0, a: 0}

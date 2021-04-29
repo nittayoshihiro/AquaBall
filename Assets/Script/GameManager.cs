@@ -10,8 +10,8 @@ public class GameManager : MonoBehaviour
 {
     /// <summary>ゲームの状況</summary>
     private GameState m_gameState = GameState.NonInitialized;
-    /// <summary>スタートボタン</summary>
-    [SerializeField] GameObject m_startButton = null;
+    /// <summary>スタートスクリーン</summary>
+    [SerializeField] GameObject m_startScreen= null;
     /// <summary>結果パネル</summary>
     [SerializeField] GameObject m_resultPanel = null;
     /// <summary>終了ボタン</summary>
@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
     public void Standby()
     {
         ChangeGameState(GameState.Initialized);
-        m_startButton.SetActive(false);
+        m_startScreen.SetActive(false);
     }
 
     /// <summary>
@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour
         }
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Destroy(player);
-        ChangeGameObjectSetActive(m_resultPanel,m_startButton);
+        ChangeGameObjectSetActive(m_resultPanel,m_startScreen);
     }
 
     /// <summary>
