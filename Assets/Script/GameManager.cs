@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
 
 [RequireComponent(typeof(TimeManager))]
 [RequireComponent(typeof(GravityController))]
@@ -16,8 +15,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject m_timerText= null;
     /// <summary>結果パネル</summary>
     [SerializeField] GameObject m_resultPanel = null;
-    /// <summary>終了ボタン</summary>
-    [SerializeField] GameObject m_finishButton = null;
     /// <summary>タイム管理</summary>
     TimeManager m_timeManager = null;
     /// <summary>重力コントロール</summary>

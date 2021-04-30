@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
 /// <summary>
 /// マップデータ作成（穴掘り方）
@@ -11,10 +10,6 @@ public class DrillingMethod
     /// <summary>マップのサイズ（奇数）</summary>
     [Header("マップサイズ※５以上の奇数を入力")]
     int m_mapSize;
-    /// <summary>作成する階層</summary>
-    int m_mapFloor = 0;
-    /// <summary>デバッグ用</summary>
-    [SerializeField] bool m_debug = false;
     /// <summary>マップデータ</summary>
     public MapState[,] m_mapdata = null;
     /// <summary>床マップデータ</summary>

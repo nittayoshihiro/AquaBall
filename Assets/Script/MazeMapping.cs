@@ -14,7 +14,7 @@ public class MazeMapping : MonoBehaviour
     [Header("マップサイズ※５以上の奇数を入力")]
     [SerializeField] int m_mapSize;
     /// <summary>作成する階層</summary>
-    [SerializeField] int m_mapFloor;
+    [SerializeField] int m_mapFloor = 0;//デフォルトは階層なし
     /// <summary>キューブプレハブ</summary>
     [SerializeField] GameObject m_cubePrefab = null;
     /// <summary>床キューブプレハブ</summary>
@@ -63,7 +63,7 @@ public class MazeMapping : MonoBehaviour
         m_drillingMethod.m_mapdata[1, 1] = DrillingMethod.MapState.Start;
         m_drillingMethod.m_goalpoint = true;
         m_drillingMethod.DigHole(new Vector3Int(1, 0, 1));
-        CreateFloorMap(m_drillingMethod.GetMapData, m_drillingMethod.m_floormapdata, m_mapName, 0f);
+        CreateFloorMap(m_drillingMethod.GetMapData, m_drillingMethod.m_floormapdata, m_mapName, m_mapFloor);
     }
 
     /// <summary>マップサイズを変更します</summary>
