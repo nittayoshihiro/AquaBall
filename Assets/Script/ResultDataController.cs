@@ -43,7 +43,7 @@ public class ResultDataController : MonoBehaviour
     public void RankingText(float resultTime)
     {
         RankingReload(resultTime);
-        m_rankingText.text = RankingFormat + "\nyou:" + string.Format("{0:000.00}", resultTime);
+        m_rankingText.text = RankingFormat + "\n  <size=70>Time:" + string.Format("{0:000.00}", resultTime)+"</size>";
     }
 
     /// <summary>
