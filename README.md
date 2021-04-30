@@ -11,7 +11,7 @@ Universal RP (URP)
 
 [フォント](https://befonts.com/oligopoly-typeface.html)
 
-[BGM（さざ波）](https://soundeffect-lab.info/sound/environment/)
+[BGM　海岸１（さざ波）](https://soundeffect-lab.info/sound/environment/)
 
 ## 使用アセット
 
