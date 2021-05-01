@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class ResultDataController : MonoBehaviour
 {
     /// <summary>データ名前</summary>
-    public static string m_textName = "ResultData";
+    public const string m_textName = "ResultData";
     /// <summary>リザルトデータ</summary>
     ResultData m_resultData = null;
     /// <summary>ランキングテキスト</summary>
@@ -148,6 +148,13 @@ public class ResultData
     public float secondPlace;
     /// <summary>３位</summary>
     public float thirdPlace;
+
+    /// <summary>
+    /// 順位初期化
+    /// </summary>
+    /// <param name="first">１位</param>
+    /// <param name="second">２位</param>
+    /// <param name="third">３位</param>
     public ResultData(float first, float second, float third)
     {
         firstPlace = first;

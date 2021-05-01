@@ -15,7 +15,7 @@ public class SettingManager : MonoBehaviour
     /// <summary>設定画面のオブジェクト</summary>
     [SerializeField] GameObject m_settingPanel = null;
     /// <summary>テキスト名前をSettingとする</summary>
-    static string m_textName = "Setting";
+    private const string m_textName = "Setting";
     /// <summary>設定の形式変数</summary>
     SettingData m_settingData = null;
     /// <summary>重力をかけるか</summary>

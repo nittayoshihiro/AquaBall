@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,8 +34,12 @@ public class MazeMapping : MonoBehaviour
     DrillingMethod m_drillingMethod = null;
     /// <summary>ゴール保存</summary>
     int m_goalx, m_goalz;
+    /// <summary>マップデータ</summary>
+    MapData m_mapData = null;
     /// <summary>マップオブジェクト</summary>
     GameObject m_mapObject = null;
+    /// <summary>保存マップ名前形式</summary>
+    const string  m_textName = "mapdata";
     /// <summary>マップ保持</summary>
     List<GameObject> m_maps = new List<GameObject>();
 
@@ -49,7 +54,6 @@ public class MazeMapping : MonoBehaviour
     /// <summary>迷路マップ</summary>
     public void CreateMap()
     {
-        //TODODrillingMethodにMonoBehaviourを継承しているのをnewしてはいけない（結果　コンストラクタはつかえない？）
         m_drillingMethod = new DrillingMethod();
         FlatMapping();
         //マップデータを入れる
@@ -143,6 +147,94 @@ public class MazeMapping : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// マップデータをセーブします
+    /// </summary>
+    public void MapDataSave()
+    {
+        FileController.TextSave(m_textName, JsonUtility.ToJson(m_mapData));
+    }
+
+    /// <summary>
+    /// マップデータをロードします
+    /// </summary>
+    /// <returns>Mapdataを返します</returns>
+    public MapData MapDataLoad
+    {
+        get
+        {
+            MapData mapdata = JsonUtility.FromJson<MapData>(FileController.TextLoad(m_textName));
+            return mapdata;
+        }
+    }
+
+    /// <summary>
+    /// MapState[,]からMapDataに変換します
+    /// </summary>
+    /// <param name="mapState">mapState</param>
+    /// <returns>string形式でマップデータを返します</returns>
+    private string FromMapStateConversionToState(DrillingMethod.MapState[,] mapState)
+    {
+        string mapdata = default;
+        for (int x = 0; x < mapState.GetLength(0); x++)
+        {
+            for (int z = 0; z < mapState.GetLength(1); z++)
+            {
+                mapdata += mapState[x, z];
+                mapdata += ',';
+            }
+            mapdata += '\n';
+        }
+        return mapdata;
+    }
+
+    /// <summary>
+    /// MapDataからMapState[,]に変換します
+    /// </summary>
+    /// <param name="mapData">変換したいMapData</param>
+    /// <returns>マップデータを返します</returns>
+    private DrillingMethod.MapState[,] FromStringConversionToMapState(MapData mapData)
+    {
+        DrillingMethod.MapState[,] mapState = new DrillingMethod.MapState[mapData.x, mapData.z];
+        string[] one = mapData.stringMapData.Split('\n');
+        for (int x = 0; x < mapData.x; x++)
+        {
+            string[] two = one[x].Split(',');
+            for (int z = 0; z < mapData.z; z++)
+            {
+                mapState[x, z] = (DrillingMethod.MapState)int.Parse(two[z]);
+            }
+        }
+        return mapState;
+    }
+
     /// <summary>マップ</summary>
     public GameObject GetMapObject => m_mapObject;
+}
+
+/// <summary>
+/// マップデータ（Json）形式
+/// </summary>
+[Serializable]
+public class MapData
+{
+    /// <summary>マップサイズX</summary>
+    public int x;
+    /// <summary>マップサイズZ</summary>
+    public int z;
+    /// <summary>文字列マップデータ</summary>
+    public string stringMapData;
+
+    /// <summary>
+    /// マップデータ初期化
+    /// </summary>
+    /// <param name="mapx">マップサイズX</param>
+    /// <param name="mapz">マップサイズZ</param>
+    /// <param name="mapdata">文字列マップデータ</param>
+    public MapData(int mapx, int mapz, string mapdata)
+    {
+        x = mapx;
+        z = mapz;
+        stringMapData = mapdata;
+    }
 }
