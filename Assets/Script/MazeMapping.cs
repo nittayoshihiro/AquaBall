@@ -39,7 +39,7 @@ public class MazeMapping : MonoBehaviour
     /// <summary>マップオブジェクト</summary>
     GameObject m_mapObject = null;
     /// <summary>保存マップ名前形式</summary>
-    const string  m_textName = "mapdata";
+    const string m_textName = "mapdata";
     /// <summary>マップ保持</summary>
     List<GameObject> m_maps = new List<GameObject>();
 
@@ -152,14 +152,28 @@ public class MazeMapping : MonoBehaviour
     /// </summary>
     public void MapDataSave()
     {
+        m_mapData = new MapData(m_mapSize, m_mapSize, FromMapStateConversionToState(m_drillingMethod.GetMapData));
         FileController.TextSave(m_textName, JsonUtility.ToJson(m_mapData));
+    }
+
+    /// <summary>
+    /// マップデータを取得、そのデータを元にマップを作成
+    /// </summary>
+    public void LoadAndMapCreate()
+    {
+        m_mapData = MapDataLoad;
+        DrillingMethod.MapState[,] mapState = FromStringConversionToMapState(m_mapData);
+        m_drillingMethod = new DrillingMethod();
+        m_drillingMethod.ResetMapData(m_mapData.x);
+        Debug.Log(new { mapState,m_drillingMethod.m_floormapdata,m_mapName,m_mapFloor});
+        CreateFloorMap(mapState, m_drillingMethod.m_floormapdata, m_mapName, m_mapFloor);
     }
 
     /// <summary>
     /// マップデータをロードします
     /// </summary>
     /// <returns>Mapdataを返します</returns>
-    public MapData MapDataLoad
+    private MapData MapDataLoad
     {
         get
         {
@@ -180,7 +194,7 @@ public class MazeMapping : MonoBehaviour
         {
             for (int z = 0; z < mapState.GetLength(1); z++)
             {
-                mapdata += mapState[x, z];
+                mapdata += (int)mapState[x, z];
                 mapdata += ',';
             }
             mapdata += '\n';
