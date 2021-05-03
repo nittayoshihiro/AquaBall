@@ -31,7 +31,7 @@ public class MazeMapping : MonoBehaviour
     /// <summary>テキストに入力された数字</summary>
     [SerializeField] Text m_numdertext = default;
     /// <summary>穴掘りメソッド</summary>
-    DrillingMethod m_drillingMethod = null;
+    DrillingMethod m_drillingMethod = new DrillingMethod();
     /// <summary>ゴール保存</summary>
     int m_goalx, m_goalz;
     /// <summary>マップデータ</summary>
@@ -54,7 +54,6 @@ public class MazeMapping : MonoBehaviour
     /// <summary>迷路マップ</summary>
     public void CreateMap()
     {
-        m_drillingMethod = new DrillingMethod();
         FlatMapping();
         //マップデータを入れる
         m_maps.Add(GetMapObject);
@@ -163,7 +162,6 @@ public class MazeMapping : MonoBehaviour
     {
         m_mapData = MapDataLoad;
         DrillingMethod.MapState[,] mapState = FromStringConversionToMapState(m_mapData);
-        m_drillingMethod = new DrillingMethod();
         m_drillingMethod.ResetMapData(m_mapData.x);
         Debug.Log(new { mapState,m_drillingMethod.m_floormapdata,m_mapName,m_mapFloor});
         CreateFloorMap(mapState, m_drillingMethod.m_floormapdata, m_mapName, m_mapFloor);

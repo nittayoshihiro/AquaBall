@@ -102,9 +102,17 @@ public class SettingManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 音量をリアルタイムで変更
+    /// </summary>
+    public void SliderVolume()
+    {
+        ChangeVolume(m_volumeSlider.value);
+    }
+
+    /// <summary>
     /// 音量を変更
     /// </summary>
-    public void ChangeVolume(float volume)
+    private void ChangeVolume(float volume)
     {
         m_settingData.volumeMeter = volume;
         m_audioSource.volume = volume;
