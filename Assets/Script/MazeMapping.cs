@@ -39,7 +39,7 @@ public class MazeMapping : MonoBehaviour
     /// <summary>マップオブジェクト</summary>
     GameObject m_mapObject = null;
     /// <summary>保存マップ名前形式</summary>
-    const string m_textName = "mapdata";
+    public const string m_textName = "mapdata";
     /// <summary>マップ保持</summary>
     List<GameObject> m_maps = new List<GameObject>();
 
@@ -165,6 +165,8 @@ public class MazeMapping : MonoBehaviour
         m_drillingMethod.ResetMapData(m_mapData.x);
         Debug.Log(new { mapState,m_drillingMethod.m_floormapdata,m_mapName,m_mapFloor});
         CreateFloorMap(mapState, m_drillingMethod.m_floormapdata, m_mapName, m_mapFloor);
+        //マップデータを入れる
+        m_maps.Add(GetMapObject);
     }
 
     /// <summary>
