@@ -15,6 +15,8 @@ public class ResultDataController : MonoBehaviour
     [SerializeField] Text m_rankingText = null;
     /// <summary>プレイヤーの順位</summary>
     private int m_playerRankig = 0;//0:順位外　1:１位　2:２位　3:３位
+    /// <summary>結果を更新するか</summary>
+    private bool m_update = true;
 
     /// <summary>
     ///データ初期化する前
@@ -38,12 +40,38 @@ public class ResultDataController : MonoBehaviour
     }
 
     /// <summary>
+    /// 結果をセーブする
+    /// </summary>
+    public void ResultSave()
+    {
+        ResultSave(m_resultData);
+    }
+
+    /// <summary>
+    /// セーブされてるデータを取得、結果を更新オン
+    /// </summary>
+    public void ResautLoad()
+    {
+        m_update = true;
+        m_resultData = GetResultLoad;
+    }
+
+    /// <summary>
+    /// 結果をリセット、結果を更新オフ
+    /// </summary>
+    public void ResultDelet()
+    {
+        m_update = false;
+        m_resultData = new ResultData(999, 999, 999);
+    }
+
+    /// <summary>
     /// ランキングテキストを更新表示します
     /// </summary>
     public void RankingText(float resultTime)
     {
-        RankingReload(resultTime);
-        m_rankingText.text = RankingFormat + "\n  <size=70>Time:" + string.Format("{0:000.00}", resultTime)+"</size>";
+        RankingReload(resultTime,m_update);
+        m_rankingText.text = RankingFormat + "\n  <size=70>Time:" + string.Format("{0:000.00}", resultTime) + "</size>";
     }
 
     /// <summary>
@@ -84,28 +112,38 @@ public class ResultDataController : MonoBehaviour
     /// <summary>
     /// ランキングを変更する
     /// </summary>
-    /// /// <param name="resultTime">結果タイム</param>
-    private void RankingReload(float resultTime)
+    /// <param name="resultTime">結果タイム</param>
+    /// <param name="update">更新するか</param>
+    private void RankingReload(float resultTime, bool update)
     {
         if (resultTime <= m_resultData.firstPlace)
         {
             m_resultData.thirdPlace = m_resultData.secondPlace;
             m_resultData.secondPlace = m_resultData.firstPlace;
             m_resultData.firstPlace = resultTime;
-            ResultSave(m_resultData);
+            if (update)
+            {
+                ResultSave(m_resultData);
+            }
             m_playerRankig = 1;
         }
         else if (resultTime <= m_resultData.secondPlace)
         {
             m_resultData.thirdPlace = m_resultData.secondPlace;
             m_resultData.secondPlace = resultTime;
-            ResultSave(m_resultData);
+            if (update)
+            {
+                ResultSave(m_resultData);
+            }
             m_playerRankig = 2;
         }
         else if (resultTime <= m_resultData.thirdPlace)
         {
             m_resultData.thirdPlace = resultTime;
-            ResultSave(m_resultData);
+            if (update)
+            {
+                ResultSave(m_resultData);
+            }
             m_playerRankig = 3;
         }
         else
@@ -126,7 +164,7 @@ public class ResultDataController : MonoBehaviour
     /// <summary>
     /// 結果ロードして返す
     /// </summary>
-    public ResultData GetResultLoad
+    private ResultData GetResultLoad
     {
         get
         {

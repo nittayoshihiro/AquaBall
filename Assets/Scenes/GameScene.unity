@@ -3263,6 +3263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_startScreen: {fileID: 1358664501}
+  m_LoadButton: {fileID: 608813297}
   m_timerText: {fileID: 8697366}
   m_resultPanel: {fileID: 700848103}
 --- !u!114 &1274682823
