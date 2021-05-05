@@ -15,11 +15,15 @@ public class SettingManager : MonoBehaviour
     /// <summary>設定画面のオブジェクト</summary>
     [SerializeField] GameObject m_settingPanel = null;
     /// <summary>テキスト名前をSettingとする</summary>
-    static string m_textName = "Setting";
+    private const string m_textName = "Setting";
     /// <summary>設定の形式変数</summary>
     SettingData m_settingData = null;
-    /// <summary></summary>
+    /// <summary>重力をかけるか</summary>
     private bool m_seepRd = false;
+    /// <summary>オーディオソース</summary>
+    AudioSource m_audioSource = null;
+    /// <summary>音量ポリューム</summary>
+    [SerializeField]Slider m_volumeSlider = null;
 
     /// <summary>
     ///データ初期化する前
@@ -31,7 +35,7 @@ public class SettingManager : MonoBehaviour
         if (!File.Exists(FileController.GetFilePath(m_textName)))
         {
             Debug.Log($"{FileController.GetFilePath(m_textName)}のファイルが見つかりませんでした。ファイルを作ります");
-            SettingData settingData = new SettingData(GravityController.ControllerState.Joystick);
+            SettingData settingData = new SettingData(GravityController.ControllerState.Joystick, 0.5f);　//デフォルトを0.5f音量
             Debug.Log(JsonUtility.ToJson(settingData));
             FileController.TextSave(m_textName, JsonUtility.ToJson(settingData));
         }
@@ -40,6 +44,9 @@ public class SettingManager : MonoBehaviour
     private void Start()
     {
         m_settingData = GetSettingLoad;
+        m_audioSource = GetComponent<AudioSource>();
+        ChangeVolume(m_settingData.volumeMeter);
+        m_volumeSlider.value = m_settingData.volumeMeter;
     }
 
     /// <summary>
@@ -95,6 +102,41 @@ public class SettingManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 音量をリアルタイムで変更
+    /// </summary>
+    public void SliderVolume()
+    {
+        ChangeVolume(m_volumeSlider.value);
+    }
+
+    /// <summary>
+    /// 音量を変更
+    /// </summary>
+    private void ChangeVolume(float volume)
+    {
+        m_settingData.volumeMeter = volume;
+        m_audioSource.volume = volume;
+    }
+
+    /// <summary>
+    /// 音量をなくす
+    /// </summary>
+    public void VolumeMute()
+    {
+        ChangeVolume(m_volumeSlider.minValue);//ボリュームをゼロにする
+        m_volumeSlider.value = m_settingData.volumeMeter;
+    }
+
+    /// <summary>
+    /// 音量を最大まであげる
+    /// </summary>
+    public void VolumeMax()
+    {
+        ChangeVolume(m_volumeSlider.maxValue);//ボリュームを最大にする
+        m_volumeSlider.value = m_settingData.volumeMeter;
+    }
+
+    /// <summary>
     /// 閉じるボタン
     /// </summary>
     public void CloseButton()
@@ -120,6 +162,7 @@ public class SettingManager : MonoBehaviour
     {
         File.Delete(FileController.GetFilePath(m_textName));
         File.Delete(FileController.GetFilePath(ResultDataController.m_textName));
+        File.Delete(FileController.GetFilePath(MazeMapping.m_textName));
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #elif UNITY_ANDROID
@@ -150,8 +193,17 @@ public class SettingData
 {
     /// <summary>操作種類</summary>
     public GravityController.ControllerState controllerState = GravityController.ControllerState.Joystick;
-    public SettingData(GravityController.ControllerState controller)
+    /// <summary>音量</summary>
+    public float volumeMeter = 0.5f;//デフォルトを0.5f音量
+
+    /// <summary>
+    /// 初期値設定
+    /// </summary>
+    /// <param name="controller"></param>
+    /// <param name="volume"></param>
+    public SettingData(GravityController.ControllerState controller, float volume)
     {
-        controllerState = controller;
+        this.controllerState = controller;
+        this.volumeMeter = volume;
     }
 }

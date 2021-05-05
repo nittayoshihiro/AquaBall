@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
@@ -24,7 +23,7 @@ public class GravityController : MonoBehaviour
     /// <summary>デバッグonoff</summary>
     [SerializeField] bool m_debug = true;
     /// <summary>加速度の補強</summary>
-    private float m_strongAcceleration = 2.0f;
+    [SerializeField] private float m_strongAcceleration = 2.0f;//２倍にします
     /// <summary>設定</summary>
     SettingManager m_settingManager = null;
     GameManager m_gameManager = null;

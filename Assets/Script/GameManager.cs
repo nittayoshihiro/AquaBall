@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
 
 [RequireComponent(typeof(TimeManager))]
 [RequireComponent(typeof(GravityController))]
@@ -12,12 +12,12 @@ public class GameManager : MonoBehaviour
     private GameState m_gameState = GameState.NonInitialized;
     /// <summary>スタートスクリーン</summary>
     [SerializeField] GameObject m_startScreen= null;
+    /// <summary>マップロードボタン</summary>
+    [SerializeField] GameObject m_LoadButton = null;
     /// <summary>タイマーテキストオブジェクト</summary>
     [SerializeField] GameObject m_timerText= null;
     /// <summary>結果パネル</summary>
     [SerializeField] GameObject m_resultPanel = null;
-    /// <summary>終了ボタン</summary>
-    [SerializeField] GameObject m_finishButton = null;
     /// <summary>タイム管理</summary>
     TimeManager m_timeManager = null;
     /// <summary>重力コントロール</summary>
@@ -30,6 +30,14 @@ public class GameManager : MonoBehaviour
         m_timeManager = GetComponent<TimeManager>();
         m_gravityController = GetComponent<GravityController>();
         m_resultDataController = FindObjectOfType<ResultDataController>();
+        if (File.Exists(FileController.GetFilePath(MazeMapping.m_textName)))
+        {
+            m_LoadButton.SetActive(true);
+        }
+        else
+        {
+            m_LoadButton.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -103,6 +111,11 @@ public class GameManager : MonoBehaviour
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Destroy(player);
         ChangeGameObjectSetActive(m_resultPanel,m_startScreen);
+        Debug.Log(File.Exists(FileController.GetFilePath(MazeMapping.m_textName)));
+        if (File.Exists(FileController.GetFilePath(MazeMapping.m_textName)))
+        {
+            m_LoadButton.SetActive(true);
+        }
     }
 
     /// <summary>
