@@ -165,6 +165,8 @@ public class SettingManager : MonoBehaviour
         File.Delete(FileController.GetFilePath(MazeMapping.m_textName));
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
+#elif UNITY_STANDALONE_WIN
+        Application.Quit();
 #elif UNITY_ANDROID
         Application.Quit();
 #endif

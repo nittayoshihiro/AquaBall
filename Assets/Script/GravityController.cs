@@ -68,6 +68,22 @@ public class GravityController : MonoBehaviour
                 }
                 break;
         }
+#elif UNITY_STANDALONE_WIN
+        switch (m_settingManager.GetGravityController)
+        {
+            case ControllerState.Joystick:
+                //ステックテスト
+                m_vector3.x = m_joystick.Horizontal;
+                m_vector3.z = m_joystick.Vertical;
+                m_vector3.y = -2.0f;
+                break;
+            case ControllerState.Acceleration:
+                //キー入力を検知ベクトルを設定
+                m_vector3.x = Input.GetAxis("Horizontal") * m_strongAcceleration;
+                m_vector3.z = Input.GetAxis("Vertical") * m_strongAcceleration;
+                m_vector3.y = -2.0f;
+                break;
+        }
 #elif UNITY_ANDROID
         //スマホデバッグ用
         switch (m_settingManager.GetGravityController)
