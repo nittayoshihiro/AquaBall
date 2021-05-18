@@ -152,6 +152,7 @@ public class MazeMapping : MonoBehaviour
     public void MapDataSave()
     {
         m_mapData = new MapData(m_mapSize, m_mapSize, FromMapStateConversionToState(m_drillingMethod.GetMapData));
+        Debug.Log(m_mapData.stringMapData);
         FileController.TextSave(m_textName, JsonUtility.ToJson(m_mapData));
     }
 
@@ -163,7 +164,7 @@ public class MazeMapping : MonoBehaviour
         m_mapData = MapDataLoad;
         DrillingMethod.MapState[,] mapState = FromStringConversionToMapState(m_mapData);
         m_drillingMethod.ResetMapData(m_mapData.x);
-        Debug.Log(new { mapState,m_drillingMethod.m_floormapdata,m_mapName,m_mapFloor});
+        Debug.Log(new { mapState, m_drillingMethod.m_floormapdata, m_mapName, m_mapFloor });
         CreateFloorMap(mapState, m_drillingMethod.m_floormapdata, m_mapName, m_mapFloor);
         //マップデータを入れる
         m_maps.Add(GetMapObject);

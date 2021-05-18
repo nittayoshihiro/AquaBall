@@ -17,6 +17,8 @@ public class ResultDataController : MonoBehaviour
     private int m_playerRankig = 0;//0:順位外　1:１位　2:２位　3:３位
     /// <summary>結果を更新するか</summary>
     private bool m_update = true;
+    /// <summary>セーブボタン</summary>
+    [SerializeField] GameObject m_saveButton = null;
 
     /// <summary>
     ///データ初期化する前
@@ -37,6 +39,15 @@ public class ResultDataController : MonoBehaviour
     void Start()
     {
         m_resultData = GetResultLoad;
+    }
+
+    /// <summary>
+    /// セーブボタンを表示非表示
+    /// </summary>
+    /// <param name="active">アクティブ</param>
+    public void SaveButtonActive(bool active)
+    {
+        m_saveButton.SetActive(active);
     }
 
     /// <summary>
@@ -70,7 +81,7 @@ public class ResultDataController : MonoBehaviour
     /// </summary>
     public void RankingText(float resultTime)
     {
-        RankingReload(resultTime,m_update);
+        RankingReload(resultTime, m_update);
         m_rankingText.text = RankingFormat + "\n  <size=70>Time:" + string.Format("{0:000.00}", resultTime) + "</size>";
     }
 
