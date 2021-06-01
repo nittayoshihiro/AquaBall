@@ -6,18 +6,16 @@ using UnityEngine.UI;
 /// <summary>
 /// ボタンシステム
 /// </summary>
-[RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(Button))]
 public class ButtonSystem : MonoBehaviour
 {
     [Header("クリック時に流すSE"),SerializeField] AudioClip m_audioClip = null;
-    AudioSource m_audioSource= null;
+    [SerializeField]AudioSource m_audioSource= null;
     Button m_button = null;
 
     // Start is called before the first frame update
     public virtual void Start()
     {
-        m_audioSource = GetComponent<AudioSource>();
         m_button = GetComponent<Button>();
         if (m_button)
         {
