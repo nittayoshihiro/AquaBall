@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1012,6 +1012,7 @@ GameObject:
   - component: {fileID: 381383695}
   - component: {fileID: 381383694}
   - component: {fileID: 381383697}
+  - component: {fileID: 381383698}
   m_Layer: 5
   m_Name: MapSaveButton
   m_TagString: Untagged
@@ -1196,6 +1197,22 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &381383698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 381383692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ad20a0f7f5534b84a6ef74dfeefe63e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_audioClip: {fileID: 8300000, guid: 3300b984ef34146918e5dd49e206446d, type: 3}
+  m_audioSource: {fileID: 1430190202}
+  m_min: 0.9
+  m_max: 1
 --- !u!1 &537410110
 GameObject:
   m_ObjectHideFlags: 0
@@ -1287,6 +1304,7 @@ GameObject:
   - component: {fileID: 608813300}
   - component: {fileID: 608813299}
   - component: {fileID: 608813302}
+  - component: {fileID: 608813303}
   m_Layer: 5
   m_Name: MapLoadButton
   m_TagString: Untagged
@@ -1504,6 +1522,22 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &608813303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 608813297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ad20a0f7f5534b84a6ef74dfeefe63e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_audioClip: {fileID: 8300000, guid: 3300b984ef34146918e5dd49e206446d, type: 3}
+  m_audioSource: {fileID: 1430190202}
+  m_min: 0.9
+  m_max: 1
 --- !u!1 &624262082
 GameObject:
   m_ObjectHideFlags: 0
@@ -1517,6 +1551,7 @@ GameObject:
   - component: {fileID: 624262085}
   - component: {fileID: 624262084}
   - component: {fileID: 624262087}
+  - component: {fileID: 624262088}
   m_Layer: 5
   m_Name: VolumeMuteButton
   m_TagString: Untagged
@@ -1690,6 +1725,22 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &624262088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 624262082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ad20a0f7f5534b84a6ef74dfeefe63e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_audioClip: {fileID: 8300000, guid: 3300b984ef34146918e5dd49e206446d, type: 3}
+  m_audioSource: {fileID: 1430190202}
+  m_min: 0.9
+  m_max: 1
 --- !u!1 &639294426
 GameObject:
   m_ObjectHideFlags: 0
@@ -2169,7 +2220,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 0.03
+  m_PixelsPerUnitMultiplier: 0.07
 --- !u!222 &700848107
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2191,6 +2242,7 @@ GameObject:
   - component: {fileID: 708886388}
   - component: {fileID: 708886387}
   - component: {fileID: 708886390}
+  - component: {fileID: 708886391}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -2375,6 +2427,22 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &708886391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708886385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ad20a0f7f5534b84a6ef74dfeefe63e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_audioClip: {fileID: 8300000, guid: 3300b984ef34146918e5dd49e206446d, type: 3}
+  m_audioSource: {fileID: 1430190202}
+  m_min: 0.9
+  m_max: 1
 --- !u!1 &772745806
 GameObject:
   m_ObjectHideFlags: 0
@@ -2466,6 +2534,7 @@ GameObject:
   - component: {fileID: 804074918}
   - component: {fileID: 804074917}
   - component: {fileID: 804074920}
+  - component: {fileID: 804074921}
   m_Layer: 5
   m_Name: DataEraseButton
   m_TagString: Untagged
@@ -2639,6 +2708,22 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &804074921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 804074915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ad20a0f7f5534b84a6ef74dfeefe63e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_audioClip: {fileID: 8300000, guid: 3300b984ef34146918e5dd49e206446d, type: 3}
+  m_audioSource: {fileID: 1430190202}
+  m_min: 0.9
+  m_max: 1
 --- !u!1 &826895207
 GameObject:
   m_ObjectHideFlags: 0
@@ -3220,6 +3305,7 @@ GameObject:
   - component: {fileID: 1026349580}
   - component: {fileID: 1026349579}
   - component: {fileID: 1026349583}
+  - component: {fileID: 1026349584}
   m_Layer: 5
   m_Name: ControllerButtton
   m_TagString: Untagged
@@ -3393,6 +3479,22 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &1026349584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1026349578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ad20a0f7f5534b84a6ef74dfeefe63e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_audioClip: {fileID: 8300000, guid: 3300b984ef34146918e5dd49e206446d, type: 3}
+  m_audioSource: {fileID: 1430190202}
+  m_min: 0.9
+  m_max: 1
 --- !u!1 &1029453410
 GameObject:
   m_ObjectHideFlags: 0
@@ -4011,6 +4113,7 @@ GameObject:
   - component: {fileID: 1155636794}
   - component: {fileID: 1155636793}
   - component: {fileID: 1155636796}
+  - component: {fileID: 1155636797}
   m_Layer: 5
   m_Name: VolumeMaxButton
   m_TagString: Untagged
@@ -4184,6 +4287,22 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &1155636797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1155636791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ad20a0f7f5534b84a6ef74dfeefe63e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_audioClip: {fileID: 8300000, guid: 3300b984ef34146918e5dd49e206446d, type: 3}
+  m_audioSource: {fileID: 1430190202}
+  m_min: 0.9
+  m_max: 1
 --- !u!1 &1163909171
 GameObject:
   m_ObjectHideFlags: 0
@@ -5213,6 +5332,7 @@ GameObject:
   - component: {fileID: 1430190203}
   - component: {fileID: 1430190204}
   - component: {fileID: 1430190202}
+  - component: {fileID: 1430190205}
   m_Layer: 5
   m_Name: SettingButton
   m_TagString: Untagged
@@ -5526,6 +5646,22 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1430190196}
   m_Enabled: 1
+--- !u!114 &1430190205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1430190196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ad20a0f7f5534b84a6ef74dfeefe63e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_audioClip: {fileID: 8300000, guid: 3300b984ef34146918e5dd49e206446d, type: 3}
+  m_audioSource: {fileID: 1430190202}
+  m_min: 0.9
+  m_max: 1
 --- !u!1 &1451595049
 GameObject:
   m_ObjectHideFlags: 0
@@ -5621,6 +5757,7 @@ GameObject:
   - component: {fileID: 1534387659}
   - component: {fileID: 1534387658}
   - component: {fileID: 1534387661}
+  - component: {fileID: 1534387662}
   m_Layer: 5
   m_Name: FinishButton
   m_TagString: Untagged
@@ -5827,6 +5964,22 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &1534387662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534387656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ad20a0f7f5534b84a6ef74dfeefe63e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_audioClip: {fileID: 8300000, guid: 3300b984ef34146918e5dd49e206446d, type: 3}
+  m_audioSource: {fileID: 1430190202}
+  m_min: 0.9
+  m_max: 1
 --- !u!1 &1561963368
 GameObject:
   m_ObjectHideFlags: 0
@@ -5840,6 +5993,7 @@ GameObject:
   - component: {fileID: 1561963371}
   - component: {fileID: 1561963370}
   - component: {fileID: 1561963373}
+  - component: {fileID: 1561963374}
   m_Layer: 5
   m_Name: StartButton
   m_TagString: Untagged
@@ -6057,6 +6211,22 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &1561963374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1561963368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ad20a0f7f5534b84a6ef74dfeefe63e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_audioClip: {fileID: 8300000, guid: 3300b984ef34146918e5dd49e206446d, type: 3}
+  m_audioSource: {fileID: 1430190202}
+  m_min: 0.9
+  m_max: 1
 --- !u!1 &1579471159
 GameObject:
   m_ObjectHideFlags: 0
