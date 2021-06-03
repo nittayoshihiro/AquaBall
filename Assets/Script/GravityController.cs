@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// 重力の操作をします。
@@ -154,7 +155,8 @@ public class GravityController : MonoBehaviour
         }
         else
         {
-            m_joystick.Reset();
+            PointerEventData eventData = null;
+            m_joystick.OnPointerUp(eventData);
             m_joystickGameObject.SetActive(false);
         }
     }
@@ -174,7 +176,8 @@ public class GravityController : MonoBehaviour
     /// </summary>
     public void Acceleration()
     {
-        m_joystick.Reset();
+        PointerEventData eventData = null;
+        m_joystick.OnPointerUp(eventData);
         m_joystickGameObject.SetActive(false);
         m_settingManager.ChangeGravityController(ControllerState.Acceleration);
         ControllerText();
