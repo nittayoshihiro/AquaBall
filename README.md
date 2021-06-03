@@ -32,6 +32,4 @@ Universal RP (URP)
 
 [ジョイステイックアセット](https://assetstore.unity.com/packages/tools/input-management/joystick-pack-107631)
 
-※パッケージ内のスクリプトを編集したので[こちら](https://github.com/nittayoshihiro/AquaBall/blob/master/UnityPackage/Joystick%20Pack.unitypackage?raw=true)を入れてください
-
 [アイコン UI](https://assetstore.unity.com/packages/2d/gui/icons/icons-ui-95116?locale=ja-JP)
