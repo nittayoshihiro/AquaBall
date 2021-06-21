@@ -155,7 +155,7 @@ public class GravityController : MonoBehaviour
         }
         else
         {
-            PointerEventData eventData = null;
+            PointerEventData eventData = default;
             m_joystick.OnPointerUp(eventData);
             m_joystickGameObject.SetActive(false);
         }
@@ -176,8 +176,13 @@ public class GravityController : MonoBehaviour
     /// </summary>
     public void Acceleration()
     {
-        PointerEventData eventData = null;
-        m_joystick.OnPointerUp(eventData);
+        PointerEventData eventData = new PointerEventData(FindObjectOfType<EventSystem>().GetComponent<EventSystem>());
+        Debug.Log(eventData);
+        if (eventData != null)
+        {
+            m_joystick.OnPointerUp(eventData);
+        }
+        
         m_joystickGameObject.SetActive(false);
         m_settingManager.ChangeGravityController(ControllerState.Acceleration);
         ControllerText();
