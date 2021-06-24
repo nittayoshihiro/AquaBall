@@ -23,7 +23,7 @@ public class SettingManager : MonoBehaviour
     /// <summary>オーディオソース</summary>
     AudioSource m_audioSource = null;
     /// <summary>音量ポリューム</summary>
-    [SerializeField]Slider m_volumeSlider = null;
+    [SerializeField] Slider m_volumeSlider = null;
 
     /// <summary>
     ///データ初期化する前
@@ -35,7 +35,8 @@ public class SettingManager : MonoBehaviour
         if (!File.Exists(FileController.GetFilePath(m_textName)))
         {
             Debug.Log($"{FileController.GetFilePath(m_textName)}のファイルが見つかりませんでした。ファイルを作ります");
-            SettingData settingData = new SettingData(GravityController.ControllerState.Joystick, 0.5f);　//デフォルトを0.5f音量
+            GravityController.StateJoystick stateJoystick = new GravityController.StateJoystick();
+            SettingData settingData = new SettingData(stateJoystick, 0.5f);　//デフォルトを0.5f音量
             Debug.Log(JsonUtility.ToJson(settingData));
             FileController.TextSave(m_textName, JsonUtility.ToJson(settingData));
         }
@@ -95,10 +96,10 @@ public class SettingManager : MonoBehaviour
     /// <summary>
     /// GravityControllerを変更する際呼び出す
     /// </summary>
-    /// <param name="controllerState">変更したいコントロール</param>
-    public void ChangeGravityController(GravityController.ControllerState controllerState)
+    /// <param name="gravityController">変更したいコントロール</param>
+    public void ChangeGravityController(GravityControllerBaseState gravityController)
     {
-        m_settingData.controllerState = controllerState;
+        m_settingData.gravityControllerBaseState = gravityController;
     }
 
     /// <summary>
@@ -165,9 +166,7 @@ public class SettingManager : MonoBehaviour
         File.Delete(FileController.GetFilePath(MazeMapping.m_textName));
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-#elif UNITY_STANDALONE_WIN
-        Application.Quit();
-#elif UNITY_ANDROID
+#elif UNITY_STANDALONE_WIN||UNITY_ANDROID
         Application.Quit();
 #endif
     }
@@ -184,7 +183,7 @@ public class SettingManager : MonoBehaviour
         }
     }
 
-    public GravityController.ControllerState GetGravityController => m_settingData.controllerState;
+    public StateId GetGravityController => m_settingData.gravityControllerBaseState.StateId;
 }
 
 /// <summary>
@@ -194,7 +193,7 @@ public class SettingManager : MonoBehaviour
 public class SettingData
 {
     /// <summary>操作種類</summary>
-    public GravityController.ControllerState controllerState = GravityController.ControllerState.Joystick;
+    public GravityControllerBaseState gravityControllerBaseState;
     /// <summary>音量</summary>
     public float volumeMeter = 0.5f;//デフォルトを0.5f音量
 
@@ -203,9 +202,9 @@ public class SettingData
     /// </summary>
     /// <param name="controller"></param>
     /// <param name="volume"></param>
-    public SettingData(GravityController.ControllerState controller, float volume)
+    public SettingData(GravityControllerBaseState controller, float volume)
     {
-        this.controllerState = controller;
+        this.gravityControllerBaseState = controller;
         this.volumeMeter = volume;
     }
 }
