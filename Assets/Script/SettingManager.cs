@@ -35,8 +35,7 @@ public class SettingManager : MonoBehaviour
         if (!File.Exists(FileController.GetFilePath(m_textName)))
         {
             Debug.Log($"{FileController.GetFilePath(m_textName)}のファイルが見つかりませんでした。ファイルを作ります");
-            GravityController.StateJoystick stateJoystick = new GravityController.StateJoystick();
-            SettingData settingData = new SettingData(stateJoystick, 0.5f);　//デフォルトを0.5f音量
+            SettingData settingData = new SettingData(StateId.JoyStick, 0.5f);　//デフォルトを0.5f音量
             Debug.Log(JsonUtility.ToJson(settingData));
             FileController.TextSave(m_textName, JsonUtility.ToJson(settingData));
         }
@@ -45,6 +44,8 @@ public class SettingManager : MonoBehaviour
     private void Start()
     {
         m_settingData = GetSettingLoad;
+        Debug.Log(GetSettingLoad.gravityControllerBaseState);
+        Debug.Log(GetGravityController);
         m_audioSource = GetComponent<AudioSource>();
         ChangeVolume(m_settingData.volumeMeter);
         m_volumeSlider.value = m_settingData.volumeMeter;
@@ -99,7 +100,7 @@ public class SettingManager : MonoBehaviour
     /// <param name="gravityController">変更したいコントロール</param>
     public void ChangeGravityController(GravityControllerBaseState gravityController)
     {
-        m_settingData.gravityControllerBaseState = gravityController;
+        m_settingData.gravityControllerBaseState = gravityController.StateId;
     }
 
     /// <summary>
@@ -183,7 +184,7 @@ public class SettingManager : MonoBehaviour
         }
     }
 
-    public StateId GetGravityController => m_settingData.gravityControllerBaseState.StateId;
+    public StateId GetGravityController => m_settingData.gravityControllerBaseState;
 }
 
 /// <summary>
@@ -193,7 +194,7 @@ public class SettingManager : MonoBehaviour
 public class SettingData
 {
     /// <summary>操作種類</summary>
-    public GravityControllerBaseState gravityControllerBaseState;
+    public StateId gravityControllerBaseState;
     /// <summary>音量</summary>
     public float volumeMeter = 0.5f;//デフォルトを0.5f音量
 
@@ -202,9 +203,9 @@ public class SettingData
     /// </summary>
     /// <param name="controller"></param>
     /// <param name="volume"></param>
-    public SettingData(GravityControllerBaseState controller, float volume)
+    public SettingData(StateId controllerStateId, float volume)
     {
-        this.gravityControllerBaseState = controller;
+        this.gravityControllerBaseState = controllerStateId;
         this.volumeMeter = volume;
     }
 }

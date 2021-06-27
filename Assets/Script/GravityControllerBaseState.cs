@@ -21,7 +21,7 @@ public abstract class GravityControllerBaseState
 
     public void SetStateId(StateId stateId)
     {
-        StateId = StateId;
+        StateId = stateId;
     }
 
     /// <summary>

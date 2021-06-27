@@ -30,7 +30,7 @@ public class GravityController : MonoBehaviour
     GameManager m_gameManager = null;
     /// <summary>ゲーム状態</summary>
     GameManager.GameState m_gameState;
-    const float m_gravityScaleY = 2.0f;
+    const float m_gravityScaleY = -2.0f;
     /// <summary>ジョイスティックステート</summary>
     StateJoystick m_stateJoystick = new StateJoystick();
     /// <summary>加速度センサーステート</summary>
@@ -48,10 +48,10 @@ public class GravityController : MonoBehaviour
             Debug.Log(m_settingManager);
         }
 
+
         m_stateJoystick.SetStateId(StateId.JoyStick);
         m_stateAcceleration.SetStateId(StateId.Acceleration);
 
-        //ジョイスティック
         m_currentState = m_stateJoystick;
     }
 
@@ -68,7 +68,7 @@ public class GravityController : MonoBehaviour
     /// </summary>
     public void GravityControllerButton()
     {
-        switch (m_currentState.StateId)
+        switch (m_settingManager.GetGravityController)
         {
             case StateId.JoyStick:
                 ChangeState(m_stateAcceleration);
@@ -105,6 +105,7 @@ public class GravityController : MonoBehaviour
     public void JoystickJudgment()
     {
         m_gameState = m_gameManager.GetGameState;
+        Debug.Log(m_currentState.StateId);
         if (m_gameState == GameManager.GameState.InGame && m_currentState.StateId == StateId.JoyStick)
         {
             m_joystickGameObject.SetActive(true);
@@ -219,7 +220,7 @@ public class GravityController : MonoBehaviour
             //加速度センサーの入力をUnity空間の軸にマッピングする(座標軸が異なるため)
             owner.m_vector3.x = Input.acceleration.x;
             owner.m_vector3.z = Input.acceleration.y;
-            owner.m_vector3.y = -2.0f;//マップ外に行かないようにする
+            owner.m_vector3.y = m_gravityScaleY;//マップ外に行かないようにする
 #endif
             //シーンの重力を入力ベクトルの方向に合わせて変化させる
             Physics.gravity = m_gravity * owner.m_vector3.normalized * owner.m_gravityScale;
