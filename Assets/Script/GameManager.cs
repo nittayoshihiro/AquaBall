@@ -4,6 +4,9 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// ゲームマネージャー
+/// </summary>
 [RequireComponent(typeof(TimeManager))]
 [RequireComponent(typeof(GravityController))]
 public class GameManager : MonoBehaviour
@@ -11,11 +14,11 @@ public class GameManager : MonoBehaviour
     /// <summary>ゲームの状況</summary>
     private GameState m_gameState = GameState.NonInitialized;
     /// <summary>スタートスクリーン</summary>
-    [SerializeField] GameObject m_startScreen= null;
+    [SerializeField] GameObject m_startScreen = null;
     /// <summary>マップロードボタン</summary>
     [SerializeField] GameObject m_LoadButton = null;
     /// <summary>タイマーテキストオブジェクト</summary>
-    [SerializeField] GameObject m_timerText= null;
+    [SerializeField] GameObject m_timerText = null;
     /// <summary>結果パネル</summary>
     [SerializeField] GameObject m_resultPanel = null;
     /// <summary>タイム管理</summary>
@@ -43,6 +46,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         switch (m_gameState)
         {
             case GameState.NonInitialized:
@@ -51,7 +55,7 @@ public class GameManager : MonoBehaviour
                 GameSetUp();
                 break;
             case GameState.InGame:
-                m_gravityController.Controller();
+                m_gravityController.OnUpdate();
                 m_timeManager.TimeNow();
                 break;
             case GameState.Pause:
@@ -110,7 +114,7 @@ public class GameManager : MonoBehaviour
         }
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Destroy(player);
-        ChangeGameObjectSetActive(m_resultPanel,m_startScreen);
+        ChangeGameObjectSetActive(m_resultPanel, m_startScreen);
         Debug.Log(File.Exists(FileController.GetFilePath(MazeMapping.m_textName)));
         if (File.Exists(FileController.GetFilePath(MazeMapping.m_textName)))
         {
