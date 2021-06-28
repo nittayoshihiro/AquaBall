@@ -50,7 +50,7 @@ public class GravityController : MonoBehaviour
 
         m_stateJoystick.SetStateId(StateId.JoyStick);
         m_stateAcceleration.SetStateId(StateId.Acceleration);
-
+        m_settingManager.SetUp();
         SetUPState();
     }
 

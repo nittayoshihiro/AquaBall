@@ -41,13 +41,17 @@ public class SettingManager : MonoBehaviour
         }
     }
 
-    private void Awake()
+    /// <summary>
+    /// 設定データのセットアップ
+    /// </summary>
+    public void SetUp()
     {
         m_settingData = GetSettingLoad;
     }
 
     private void Start()
     {
+        Debug.Log("Start:"+GetSettingLoad);
         m_audioSource = GetComponent<AudioSource>();
         ChangeVolume(m_settingData.volumeMeter);
         m_volumeSlider.value = m_settingData.volumeMeter;
