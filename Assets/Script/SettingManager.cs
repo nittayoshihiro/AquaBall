@@ -41,11 +41,13 @@ public class SettingManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void Awake()
     {
         m_settingData = GetSettingLoad;
-        Debug.Log(GetSettingLoad.gravityControllerBaseState);
-        Debug.Log(GetGravityController);
+    }
+
+    private void Start()
+    {
         m_audioSource = GetComponent<AudioSource>();
         ChangeVolume(m_settingData.volumeMeter);
         m_volumeSlider.value = m_settingData.volumeMeter;

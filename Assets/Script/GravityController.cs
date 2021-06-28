@@ -48,11 +48,25 @@ public class GravityController : MonoBehaviour
             Debug.Log(m_settingManager);
         }
 
-
         m_stateJoystick.SetStateId(StateId.JoyStick);
         m_stateAcceleration.SetStateId(StateId.Acceleration);
 
-        m_currentState = m_stateJoystick;
+        SetUPState();
+    }
+
+    /// <summary>
+    /// ステートのセットアップ
+    /// </summary>
+    public void SetUPState()
+    {
+        if (m_settingManager.GetGravityController == StateId.JoyStick)
+        {
+            m_currentState = m_stateJoystick;
+        }
+        else if (m_settingManager.GetGravityController == StateId.Acceleration)
+        {
+            m_currentState = m_stateAcceleration;
+        }
     }
 
     /// <summary>
@@ -72,13 +86,16 @@ public class GravityController : MonoBehaviour
         {
             case StateId.JoyStick:
                 ChangeState(m_stateAcceleration);
+                m_settingManager.ChangeGravityController(m_stateAcceleration);
                 break;
             case StateId.Acceleration:
                 ChangeState(m_stateJoystick);
+                m_settingManager.ChangeGravityController(m_stateJoystick);
                 break;
             case StateId.None:
                 break;
         }
+        ControllerText();
     }
 
     /// <summary>
