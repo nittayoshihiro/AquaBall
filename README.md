@@ -6,11 +6,13 @@
 
 ## AquaBallポイント
 
-・[加速度センサーを使った操作](https://github.com/nittayoshihiro/AquaBall/blob/master/Assets/Script/GravityController.cs)
+・[加速度センサー](https://github.com/nittayoshihiro/AquaBall/blob/master/Assets/Script/GravityController.cs)を使った操作
 
 ・[迷路アルゴリズム](https://github.com/nittayoshihiro/AquaBall/blob/master/Assets/Script/DrillingMethod.cs)
 
 ・[ファイルシステム](https://github.com/nittayoshihiro/AquaBall/blob/master/Assets/Script/FileController.cs)
+
+・[stateパターン](https://github.com/nittayoshihiro/AquaBall/blob/master/Assets/Script/GravityControllerBaseState.cs) を使ったコントローラー管理
 
 ## 使用パッケージ
 
