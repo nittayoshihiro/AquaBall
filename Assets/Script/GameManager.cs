@@ -9,10 +9,10 @@ using UnityEngine.UI;
 /// </summary>
 [RequireComponent(typeof(TimeManager))]
 [RequireComponent(typeof(GravityController))]
-public class GameManager : MonoBehaviour
+public partial class GameManager : MonoBehaviour
 {
     /// <summary>ゲームの状況</summary>
-    private GameState m_gameState = GameState.NonInitialized;
+    private GameManagerBaseState m_currentGameManagerBaseState;
     /// <summary>スタートスクリーン</summary>
     [SerializeField] GameObject m_startScreen = null;
     /// <summary>マップロードボタン</summary>
@@ -23,13 +23,21 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject m_resultPanel = null;
     /// <summary>タイム管理</summary>
     TimeManager m_timeManager = null;
+
+    /// <summary>ゲームの状況</summary>
+    private GameState m_gameState = GameState.NonInitialized;
     /// <summary>重力コントロール</summary>
     GravityController m_gravityController = null;
     ResultDataController m_resultDataController = null;
 
+    InitializedState m_initializedState = new InitializedState();
+    InGame m_inGame = new InGame();
+    PauseState m_pauseState = new PauseState();
+
     // Start is called before the first frame update
     void Start()
     {
+        m_currentGameManagerBaseState = m_initializedState;
         m_timeManager = GetComponent<TimeManager>();
         m_gravityController = GetComponent<GravityController>();
         m_resultDataController = FindObjectOfType<ResultDataController>();
@@ -46,8 +54,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(m_currentGameManagerBaseState);
+        m_currentGameManagerBaseState.OnUpdate(this);
 
-        switch (m_gameState)
+        /*switch (m_gameState)
         {
             case GameState.NonInitialized:
                 break;
@@ -60,7 +70,7 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.Pause:
                 break;
-        }
+        }*/
     }
 
 
@@ -68,9 +78,11 @@ public class GameManager : MonoBehaviour
     /// ゲームステータス変更
     /// </summary>
     /// <param name="gameState">変更したいステータス</param>
-    public void ChangeGameState(GameState gameState)
+    public void ChangeGameState(GameManagerBaseState nextGameState)
     {
-        m_gameState = gameState;
+        m_currentGameManagerBaseState.OnExit(this,nextGameState);
+        nextGameState.OnEnter(this,m_currentGameManagerBaseState);
+        m_currentGameManagerBaseState = nextGameState;
     }
 
     /// <summary>
@@ -79,7 +91,7 @@ public class GameManager : MonoBehaviour
     public void Standby()
     {
         m_gravityController.ResetGravity();
-        ChangeGameState(GameState.Initialized);
+        ChangeGameState(m_inGame);
         m_startScreen.SetActive(false);
     }
 
@@ -88,7 +100,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void GameSetUp()
     {
-        ChangeGameState(GameState.InGame);
+        //ChangeGameState(m_inGame);
         m_timerText.SetActive(true);
         m_gravityController.JoystickJudgment();
     }
@@ -98,7 +110,7 @@ public class GameManager : MonoBehaviour
     {
         m_timerText.SetActive(false);
         m_timeManager.TimerStop();
-        ChangeGameState(GameState.NonInitialized);
+        ChangeGameState(m_initializedState);
         m_gravityController.JoystickJudgment();
         m_resultPanel.SetActive(true);
         m_resultDataController.RankingText(m_timeManager.GetTime);
