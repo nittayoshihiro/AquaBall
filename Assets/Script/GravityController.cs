@@ -29,14 +29,14 @@ public class GravityController : MonoBehaviour
     SettingManager m_settingManager = null;
     GameManager m_gameManager = null;
     /// <summary>ゲーム状態</summary>
-    GameManager.GameState m_gameState;
+    GameManagerBaseState m_gameState;
     const float m_gravityScaleY = -2.0f;
     /// <summary>ジョイスティックステート</summary>
     StateJoystick m_stateJoystick = new StateJoystick();
     /// <summary>加速度センサーステート</summary>
     StateAcceleration m_stateAcceleration = new StateAcceleration();
     /// <summary>現在のステート</summary>
-    GravityControllerBaseState m_currentState;
+    GravityControllerBaseState m_currentControllerState;
 
     private void Start()
     {
@@ -61,11 +61,11 @@ public class GravityController : MonoBehaviour
     {
         if (m_settingManager.GetGravityController == StateId.JoyStick)
         {
-            m_currentState = m_stateJoystick;
+            m_currentControllerState = m_stateJoystick;
         }
         else if (m_settingManager.GetGravityController == StateId.Acceleration)
         {
-            m_currentState = m_stateAcceleration;
+            m_currentControllerState = m_stateAcceleration;
         }
     }
 
@@ -74,7 +74,7 @@ public class GravityController : MonoBehaviour
     /// </summary>
     public void OnUpdate()
     {
-        m_currentState.OnUpdate(this);
+        m_currentControllerState.OnUpdate(this);
     }
 
     /// <summary>
@@ -103,7 +103,7 @@ public class GravityController : MonoBehaviour
     /// </summary>
     public void ControllerText()
     {
-        switch (m_currentState.StateId)
+        switch (m_currentControllerState.stateId)
         {
             case StateId.JoyStick:
                 m_textController.text = "Joystick";
@@ -122,8 +122,8 @@ public class GravityController : MonoBehaviour
     public void JoystickJudgment()
     {
         m_gameState = m_gameManager.GetGameState;
-        Debug.Log(m_currentState.StateId);
-        if (m_gameState == GameManager.GameState.InGame && m_currentState.StateId == StateId.JoyStick)
+        Debug.Log("スティックジャッジ:"+m_gameManager.GetGameState.gameManagerId);
+        if (m_gameManager.GetGameState.gameManagerId == GameManagerId.InGame && m_currentControllerState.stateId == StateId.JoyStick)
         {
             m_joystickGameObject.SetActive(true);
         }
@@ -175,15 +175,15 @@ public class GravityController : MonoBehaviour
     /// </summary>
     public void ChangeState(GravityControllerBaseState nextBaseState)
     {
-        m_currentState.OnExit(this, nextBaseState);
-        nextBaseState.OnEnter(this, m_currentState);
-        m_currentState = nextBaseState;
+        m_currentControllerState.OnExit(this, nextBaseState);
+        nextBaseState.OnEnter(this, m_currentControllerState);
+        m_currentControllerState = nextBaseState;
     }
 
     /*public T GetCurrentState<T>() where T : GravityControllerBaseState
         => m_currentState as T;*/
 
-    public StateId GetCurrentState => m_currentState.StateId;
+    public StateId GetCurrentState => m_currentControllerState.stateId;
 
     /// <summary>
     /// ジョイスティック状態の処理

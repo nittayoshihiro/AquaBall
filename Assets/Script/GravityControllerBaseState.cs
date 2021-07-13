@@ -17,11 +17,11 @@ public enum StateId
 /// </summary>
 public abstract class GravityControllerBaseState
 {
-    public StateId StateId { get; private set; } = StateId.None;
+    public StateId stateId { get; private set; } = StateId.None;
 
-    public void SetStateId(StateId stateId)
+    public void SetStateId(StateId setStateId)
     {
-        StateId = stateId;
+        this.stateId = setStateId;
     }
 
     /// <summary>

@@ -11,7 +11,7 @@ public partial class GameManager
     {
         public override void OnEnter(GameManager owner, GameManagerBaseState prevbaseState)
         {
-            
+            owner.GameSetUp();
         }
 
         public override void OnUpdate(GameManager owner)
@@ -24,5 +24,16 @@ public partial class GameManager
         {
 
         }
+    }
+
+
+    /// <summary>
+    /// ゲームをセットアップする
+    /// </summary>
+    public void GameSetUp()
+    {
+        Debug.Log("setUp");
+        m_timerText.SetActive(true);
+        m_gravityController.JoystickJudgment();
     }
 }
