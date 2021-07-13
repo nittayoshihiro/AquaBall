@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 /// <summary>
 /// 重力の操作をします。
 /// </summary>
-public class GravityController : MonoBehaviour
+public partial class GravityController : MonoBehaviour
 {
     /// <summary>重力</summary>
     const float m_gravity = 9.81f;
@@ -85,11 +85,11 @@ public class GravityController : MonoBehaviour
         switch (m_settingManager.GetGravityController)
         {
             case StateId.JoyStick:
-                ChangeState(m_stateAcceleration);
+                Acceleration();
                 m_settingManager.ChangeGravityController(m_stateAcceleration);
                 break;
             case StateId.Acceleration:
-                ChangeState(m_stateJoystick);
+                Joystick();
                 m_settingManager.ChangeGravityController(m_stateJoystick);
                 break;
             case StateId.None:
@@ -122,7 +122,7 @@ public class GravityController : MonoBehaviour
     public void JoystickJudgment()
     {
         m_gameState = m_gameManager.GetGameState;
-        Debug.Log("スティックジャッジ:"+m_gameManager.GetGameState.gameManagerId);
+        Debug.Log("スティックジャッジ:" + m_gameManager.GetGameState.gameManagerId);
         if (m_gameManager.GetGameState.gameManagerId == GameManagerId.InGame && m_currentControllerState.stateId == StateId.JoyStick)
         {
             m_joystickGameObject.SetActive(true);
@@ -176,80 +176,10 @@ public class GravityController : MonoBehaviour
     public void ChangeState(GravityControllerBaseState nextBaseState)
     {
         m_currentControllerState.OnExit(this, nextBaseState);
-        nextBaseState.OnEnter(this, m_currentControllerState);
         m_currentControllerState = nextBaseState;
+        nextBaseState.OnEnter(this, m_currentControllerState);
     }
-
-    /*public T GetCurrentState<T>() where T : GravityControllerBaseState
-        => m_currentState as T;*/
 
     public StateId GetCurrentState => m_currentControllerState.stateId;
 
-    /// <summary>
-    /// ジョイスティック状態の処理
-    /// </summary>
-    public class StateJoystick : GravityControllerBaseState
-    {
-        public override void OnEnter(GravityController owner, GravityControllerBaseState gravityControllerBaseState)
-        {
-
-        }
-
-        public override void OnUpdate(GravityController owner)
-        {
-            //キー入力を検知ベクトルを設定
-            owner.m_vector3.x = owner.m_joystick.Horizontal;
-            owner.m_vector3.z = owner.m_joystick.Vertical;
-            owner.m_vector3.y = m_gravityScaleY;
-            //シーンの重力を入力ベクトルの方向に合わせて変化させる
-            Physics.gravity = m_gravity * owner.m_vector3.normalized * owner.m_gravityScale;
-            if (owner.m_debug)
-            {
-                Debug.Log(Physics.gravity);
-            }
-        }
-
-        public override void OnExit(GravityController owner, GravityControllerBaseState nextState)
-        {
-
-        }
-    }
-
-    /// <summary>
-    /// 加速度センサー状態の処理
-    /// </summary>
-    public class StateAcceleration : GravityControllerBaseState
-    {
-        public override void OnEnter(GravityController owner, GravityControllerBaseState prevbaseState)
-        {
-
-        }
-
-        public override void OnUpdate(GravityController owner)
-        {
-#if UNITY_EDITOR||UNITY_STANDALONE_WIN
-            //キー入力を検知ベクトルを設定
-            owner.m_vector3.x = Input.GetAxis("Horizontal") * owner.m_strongAcceleration;
-            owner.m_vector3.z = Input.GetAxis("Vertical") * owner.m_strongAcceleration;
-            owner.m_vector3.y = m_gravityScaleY;
-#elif UNITY_ANDROID
-            //スマホデバッグ用
-            //加速度センサーの入力をUnity空間の軸にマッピングする(座標軸が異なるため)
-            owner.m_vector3.x = Input.acceleration.x;
-            owner.m_vector3.z = Input.acceleration.y;
-            owner.m_vector3.y = m_gravityScaleY;//マップ外に行かないようにする
-#endif
-            //シーンの重力を入力ベクトルの方向に合わせて変化させる
-            Physics.gravity = m_gravity * owner.m_vector3.normalized * owner.m_gravityScale;
-            if (owner.m_debug)
-            {
-                Debug.Log(Physics.gravity);
-            }
-        }
-
-        public override void OnExit(GravityController owner, GravityControllerBaseState nextState)
-        {
-
-        }
-    }
 }

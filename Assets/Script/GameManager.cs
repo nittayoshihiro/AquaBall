@@ -1,18 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
 /// ゲームマネージャー
 /// </summary>
 [RequireComponent(typeof(TimeManager))]
 [RequireComponent(typeof(GravityController))]
-public partial class GameManager : MonoBehaviour
+public partial class GameManager :SingletonMonoBehaviour<GameManager>
 {
     /// <summary>ゲームの状況</summary>
     private GameManagerBaseState m_currentGameManagerBaseState;
+    /// <summary>初期化ステート</summary>
+    InitializedState m_initializedState = new InitializedState();
+    /// <summary>ゲーム中ステート</summary>
+    InGame m_inGame = new InGame();
+    /// <summary>中断ステート</summary>
+    PauseState m_pauseState = new PauseState();
     /// <summary>スタートスクリーン</summary>
     [SerializeField] GameObject m_startScreen = null;
     /// <summary>マップロードボタン</summary>
@@ -23,17 +26,19 @@ public partial class GameManager : MonoBehaviour
     [SerializeField] GameObject m_resultPanel = null;
     /// <summary>タイム管理</summary>
     TimeManager m_timeManager = null;
-
-    /*/// <summary>ゲームの状況</summary>
-    private GameState m_gameState = GameState.NonInitialized;*/
-
     /// <summary>重力コントロール</summary>
     GravityController m_gravityController = null;
+    /// <summary>結果データ</summary>
     ResultDataController m_resultDataController = null;
 
-    InitializedState m_initializedState = new InitializedState();
-    InGame m_inGame = new InGame();
-    PauseState m_pauseState = new PauseState();
+    private void Awake()
+    {
+        //1つ以上あったらゲームオブジェクトを削除
+        if (this != Instance)
+        {
+            Destroy(gameObject);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -43,6 +48,7 @@ public partial class GameManager : MonoBehaviour
         m_gravityController = GetComponent<GravityController>();
         m_resultDataController = FindObjectOfType<ResultDataController>();
 
+        //ステートのIDを設定
         m_initializedState.SetStateId(GameManagerId.Initialized);
         m_inGame.SetStateId(GameManagerId.InGame);
         m_pauseState.SetStateId(GameManagerId.Pause);
