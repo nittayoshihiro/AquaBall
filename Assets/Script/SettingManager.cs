@@ -106,7 +106,7 @@ public class SettingManager : MonoBehaviour
     /// <param name="gravityController">変更したいコントロール</param>
     public void ChangeGravityController(GravityControllerBaseState gravityController)
     {
-        m_settingData.gravityControllerBaseState = gravityController.StateId;
+        m_settingData.gravityControllerBaseState = gravityController.stateId;
     }
 
     /// <summary>
