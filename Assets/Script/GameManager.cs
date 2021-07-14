@@ -9,7 +9,7 @@ using UnityEngine;
 public partial class GameManager :SingletonMonoBehaviour<GameManager>
 {
     /// <summary>ゲームの状況</summary>
-    private GameManagerBaseState m_currentGameManagerBaseState;
+    GameManagerBaseState m_currentGameManagerBaseState;
     /// <summary>初期化ステート</summary>
     InitializedState m_initializedState = new InitializedState();
     /// <summary>ゲーム中ステート</summary>
@@ -30,6 +30,9 @@ public partial class GameManager :SingletonMonoBehaviour<GameManager>
     GravityController m_gravityController = null;
     /// <summary>結果データ</summary>
     ResultDataController m_resultDataController = null;
+
+    /// <summary>今のゲーム状態を取得する</summary>
+    public GameManagerBaseState CurrentState => m_currentGameManagerBaseState;
 
     private void Awake()
     {
@@ -68,7 +71,6 @@ public partial class GameManager :SingletonMonoBehaviour<GameManager>
     {
         m_currentGameManagerBaseState.OnUpdate(this);
     }
-
 
     /// <summary>
     /// ゲームステータス変更
@@ -130,7 +132,4 @@ public partial class GameManager :SingletonMonoBehaviour<GameManager>
         falseGameObject.SetActive(false);
         trueGameObject.SetActive(true);
     }
-
-    public GameManagerBaseState GetGameState => m_currentGameManagerBaseState;
-
 }

@@ -27,9 +27,7 @@ public partial class GravityController : MonoBehaviour
     [SerializeField] private float m_strongAcceleration = 2.0f;//２倍にします
     /// <summary>設定</summary>
     SettingManager m_settingManager = null;
-    GameManager m_gameManager = null;
-    /// <summary>ゲーム状態</summary>
-    GameManagerBaseState m_gameState;
+    /// <summary>固定重力</summary>
     const float m_gravityScaleY = -2.0f;
     /// <summary>ジョイスティックステート</summary>
     StateJoystick m_stateJoystick = new StateJoystick();
@@ -40,7 +38,6 @@ public partial class GravityController : MonoBehaviour
 
     private void Start()
     {
-        m_gameManager = GetComponent<GameManager>();
         m_joystick = m_joystickGameObject.GetComponent<FloatingJoystick>();
         m_settingManager = FindObjectOfType<SettingManager>();
         if (m_debug)
@@ -121,9 +118,8 @@ public partial class GravityController : MonoBehaviour
     /// </summary>
     public void JoystickJudgment()
     {
-        m_gameState = m_gameManager.GetGameState;
-        Debug.Log("スティックジャッジ:" + m_gameManager.GetGameState.gameManagerId);
-        if (m_gameManager.GetGameState.gameManagerId == GameManagerId.InGame && m_currentControllerState.stateId == StateId.JoyStick)
+        Debug.Log("スティックジャッジ:" + GameManager.Instance.CurrentState.gameManagerId);
+        if (GameManager.Instance.CurrentState.gameManagerId == GameManagerId.InGame && m_currentControllerState.stateId == StateId.JoyStick)
         {
             m_joystickGameObject.SetActive(true);
         }

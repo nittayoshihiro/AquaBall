@@ -3,45 +3,55 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/// <summary>
+/// マップの入れ物
+/// </summary>
 [Serializable]
 public class MapDataContena
 {
-    [SerializeField] private string _mapDataName;
-    [SerializeField] private MapData _mapData;
+    /// <summary>マップの名前</summary>
+    [SerializeField] private string m_mapDataNamem;
+    /// <summary>マップデータ</summary>
+    [SerializeField] private MapData m_mapData;
 
-    public string MapDataName => _mapDataName;
-    public MapData MapData => _mapData;
+    public string MapDataName => m_mapDataNamem;
+    public MapData MapData => m_mapData;
 
     public MapDataContena(string mapDataName, MapData mapData)
     {
-        _mapDataName = mapDataName;
-        _mapData = mapData;
+        m_mapDataNamem = mapDataName;
+        m_mapData = mapData;
     }
 
     public void SetMapDataName(string name)
     {
-        _mapDataName = name;
+        m_mapDataNamem = name;
     }
 }
 
+/// <summary>
+/// マップ格納
+/// </summary>
 [Serializable]
 public class MapDataStore
 {
-    [SerializeField] private MapDataContena[] _contenas = new MapDataContena[5];
-    int _contenaCount = 0;
+    /// <summary>複数のコンテナマップデータ</summary>
+    [SerializeField] private MapDataContena[] m_contenas = new MapDataContena[5];
+    /// <summary></summary>
+    int m_contenaCount = 0;
 
     public void SetContena(MapDataContena contena)
     {
-        if (_contenaCount > _contenas.Length - 1) return;
-        _contenas[_contenaCount] = contena;
+        if (m_contenaCount > m_contenas.Length - 1) return;
+        m_contenas[m_contenaCount] = contena;
     }
 
     public MapDataContena GetContna(int index)
     {
-        if (_contenaCount > _contenas.Length - 1) return new MapDataContena("",new MapData(1,1,""));
+        if (m_contenaCount > m_contenas.Length - 1) return new MapDataContena("",new MapData(1,1,""));
 
-        return _contenas[index];
+        return m_contenas[index];
     }
 
-    public MapDataContena[] GetContnas => _contenas;
+    public MapDataContena[] GetContnas => m_contenas;
 }
