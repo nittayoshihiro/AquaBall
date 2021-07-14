@@ -234,11 +234,16 @@ public class MazeMapping : MonoBehaviour
 public class MapData
 {
     /// <summary>マップサイズX</summary>
-    public int x;
+    [SerializeField]private int _x;
     /// <summary>マップサイズZ</summary>
-    public int z;
+    [SerializeField]private int _z;
     /// <summary>文字列マップデータ</summary>
-    public string stringMapData;
+    [SerializeField]private string _stringMapData;
+
+
+    public int x => _x;
+    public int z => _z;
+    public string stringMapData => _stringMapData;
 
     /// <summary>
     /// マップデータ初期化
@@ -248,8 +253,8 @@ public class MapData
     /// <param name="mapdata">文字列マップデータ</param>
     public MapData(int mapx, int mapz, string mapdata)
     {
-        x = mapx;
-        z = mapz;
-        stringMapData = mapdata;
+        _x = mapx;
+        _z = mapz;
+        _stringMapData = mapdata;
     }
 }
