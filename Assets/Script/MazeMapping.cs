@@ -184,6 +184,45 @@ public class MazeMapping : MonoBehaviour
     }
 
     /// <summary>
+    /// マップデータコードを返します。
+    /// </summary>
+    /// <param name="mapState"></param>
+    /// <returns></returns>
+    public int[] MapdataCode(DrillingMethod.MapState[,] mapState)
+    {
+        int[] mapdatacode = default;
+        for (int x = 0; x < mapState.GetLength(0); x++)
+        {
+            int mapSeed = 0;//マップ列内シード
+            for (int z = 0; z < mapState.GetLength(1); z++)
+            {
+                if (mapState[x, z] == DrillingMethod.MapState.Wall)
+                {
+                    int two = 1;
+                    for (int index = 0; index < z; index++)
+                    {
+                        two *= 2;
+                    }
+                    mapSeed += two;
+                }
+            }
+            mapdatacode[x] = mapSeed;
+        }
+        return mapdatacode;
+    }
+
+    public DrillingMethod.MapState[,] MapDataCodeToMapState(int[] mapdatacode)
+    {
+        DrillingMethod.MapState[,] mapState = new DrillingMethod.MapState[m_mapSize,m_mapSize];
+        for (int i = 0; i < mapdatacode.Length; i++)
+        {
+            
+            //mapdatacode[i]
+        }
+        return mapState;
+    }
+
+    /// <summary>
     /// MapState[,]からMapDataに変換します
     /// </summary>
     /// <param name="mapState">mapState</param>
@@ -234,11 +273,11 @@ public class MazeMapping : MonoBehaviour
 public class MapData
 {
     /// <summary>マップサイズX</summary>
-    [SerializeField]private int _x;
+    [SerializeField] private int _x;
     /// <summary>マップサイズZ</summary>
-    [SerializeField]private int _z;
+    [SerializeField] private int _z;
     /// <summary>文字列マップデータ</summary>
-    [SerializeField]private string _stringMapData;
+    [SerializeField] private string _stringMapData;
 
 
     public int x => _x;

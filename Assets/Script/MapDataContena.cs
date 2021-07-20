@@ -27,6 +27,11 @@ public class MapDataContena
     {
         m_mapDataNamem = name;
     }
+
+    public override string ToString()
+    {
+        return "mapname" + m_mapDataNamem + "mapname" + m_mapData;
+    }
 }
 
 /// <summary>
@@ -48,7 +53,7 @@ public class MapDataStore
 
     public MapDataContena GetContna(int index)
     {
-        if (m_contenaCount > m_contenas.Length - 1) return new MapDataContena("",new MapData(1,1,""));
+        if (m_contenaCount > m_contenas.Length - 1) return new MapDataContena("", new MapData(1, 1, ""));
 
         return m_contenas[index];
     }
