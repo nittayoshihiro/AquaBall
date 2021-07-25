@@ -151,8 +151,8 @@ public class MazeMapping : MonoBehaviour
     /// </summary>
     public void MapDataSave()
     {
-        m_mapData = new MapData(m_mapSize, m_mapSize, FromMapStateConversionToState(m_drillingMethod.GetMapData));
-        Debug.Log(m_mapData.stringMapData);
+        m_mapData = new MapData(m_mapSize, m_mapSize, MapdataCode(m_drillingMethod.GetMapData));//FromMapStateConversionToState(m_drillingMethod.GetMapData));
+        Debug.Log(m_mapData.IntMapData);
         FileController.TextSave(m_textName, JsonUtility.ToJson(m_mapData));
     }
 
@@ -162,7 +162,7 @@ public class MazeMapping : MonoBehaviour
     public void LoadAndMapCreate()
     {
         m_mapData = MapDataLoad;
-        DrillingMethod.MapState[,] mapState = FromStringConversionToMapState(m_mapData);
+        DrillingMethod.MapState[,] mapState = MapDataCodeToMapState(m_mapData.IntMapData);//FromStringConversionToMapState(m_mapData);
         m_drillingMethod.ResetMapData(m_mapData.x);
         Debug.Log(new { mapState, m_drillingMethod.m_floormapdata, m_mapName, m_mapFloor });
         CreateFloorMap(mapState, m_drillingMethod.m_floormapdata, m_mapName, m_mapFloor);
@@ -190,7 +190,7 @@ public class MazeMapping : MonoBehaviour
     /// <returns></returns>
     public int[] MapdataCode(DrillingMethod.MapState[,] mapState)
     {
-        int[] mapdatacode = default;
+        int[] mapdatacode = new int[mapState.GetLength(1)];
         for (int x = 0; x < mapState.GetLength(0); x++)
         {
             int mapSeed = 0;//マップ列内シード
@@ -201,7 +201,7 @@ public class MazeMapping : MonoBehaviour
                     int two = 1;
                     for (int index = 0; index < z; index++)
                     {
-                        two *= 2;
+                        two *= 2;//２進数の重み
                     }
                     mapSeed += two;
                 }
@@ -211,56 +211,87 @@ public class MazeMapping : MonoBehaviour
         return mapdatacode;
     }
 
+    /// <summary>
+    /// マップコードをマップステータスに変更します。
+    /// </summary>
+    /// <param name="mapdatacode"></param>
+    /// <returns></returns>
     public DrillingMethod.MapState[,] MapDataCodeToMapState(int[] mapdatacode)
     {
-        DrillingMethod.MapState[,] mapState = new DrillingMethod.MapState[m_mapSize,m_mapSize];
+        DrillingMethod.MapState[,] mapState = new DrillingMethod.MapState[m_mapSize, m_mapSize];
+        int num = 1144;//２進数マップサイズ最大時
+        int mapcode = 0;
         for (int i = 0; i < mapdatacode.Length; i++)
         {
-            
-            //mapdatacode[i]
+            mapcode = mapdatacode[i];
+            num = 1024;
+            Debug.Log(mapcode);
+            for (int j = 0; mapcode != 0; j++)
+            {
+                if (mapcode >= num)
+                {
+                    mapcode -= num;
+                    mapState[i, j] = DrillingMethod.MapState.Wall;
+                }
+                else
+                {
+                    mapState[i, j] = DrillingMethod.MapState.Road;
+                }
+
+                if (2 <= num)
+                {
+                    num /= 2;
+                }
+                else
+                {
+                    num -= 1;
+                }
+                Debug.Log(num + ":" + mapcode);
+            }
+
         }
         return mapState;
     }
 
-    /// <summary>
-    /// MapState[,]からMapDataに変換します
-    /// </summary>
-    /// <param name="mapState">mapState</param>
-    /// <returns>string形式でマップデータを返します</returns>
-    private string FromMapStateConversionToState(DrillingMethod.MapState[,] mapState)
-    {
-        string mapdata = default;
-        for (int x = 0; x < mapState.GetLength(0); x++)
-        {
-            for (int z = 0; z < mapState.GetLength(1); z++)
-            {
-                mapdata += (int)mapState[x, z];
-                mapdata += ',';
-            }
-            mapdata += '\n';
-        }
-        return mapdata;
-    }
+    ///// <summary>
+    ///// MapState[,]からMapDataに変換します
+    ///// </summary>
+    ///// <param name="mapState">mapState</param>
+    ///// <returns>string形式でマップデータを返します</returns>
+    //private string FromMapStateConversionToState(DrillingMethod.MapState[,] mapState)
+    //{
+    //    string mapdata = default;
+    //    for (int x = 0; x < mapState.GetLength(0); x++)
+    //    {
+    //        for (int z = 0; z < mapState.GetLength(1); z++)
+    //        {
+    //            mapdata += (int)mapState[x, z];
+    //            mapdata += ',';
+    //        }
+    //        mapdata += '\n';
+    //    }
+    //    return mapdata;
+    //}
 
-    /// <summary>
-    /// MapDataからMapState[,]に変換します
-    /// </summary>
-    /// <param name="mapData">変換したいMapData</param>
-    /// <returns>マップデータを返します</returns>
-    private DrillingMethod.MapState[,] FromStringConversionToMapState(MapData mapData)
-    {
-        DrillingMethod.MapState[,] mapState = new DrillingMethod.MapState[mapData.x, mapData.z];
-        string[] one = mapData.stringMapData.Split('\n');
-        for (int x = 0; x < mapData.x; x++)
-        {
-            string[] two = one[x].Split(',');
-            for (int z = 0; z < mapData.z; z++)
-            {
-                mapState[x, z] = (DrillingMethod.MapState)int.Parse(two[z]);
-            }
-        }
-        return mapState;
-    }
+    ///// <summary>
+    ///// MapDataからMapState[,]に変換します
+    ///// </summary>
+    ///// <param name="mapData">変換したいMapData</param>
+    ///// <returns>マップデータを返します</returns>
+    //private DrillingMethod.MapState[,] FromStringConversionToMapState(MapData mapData)
+    //{
+    //    DrillingMethod.MapState[,] mapState = new DrillingMethod.MapState[mapData.x, mapData.z];
+    //    string[] one = mapData.stringMapData.Split('\n');
+    //    for (int x = 0; x < mapData.x; x++)
+    //    {
+    //        string[] two = one[x].Split(',');
+    //        for (int z = 0; z < mapData.z; z++)
+    //        {
+    //            mapState[x, z] = (DrillingMethod.MapState)int.Parse(two[z]);
+    //        }
+    //    }
+    //    return mapState;
+    //}
 
     /// <summary>マップ</summary>
     public GameObject GetMapObject => m_mapObject;
@@ -277,12 +308,13 @@ public class MapData
     /// <summary>マップサイズZ</summary>
     [SerializeField] private int _z;
     /// <summary>文字列マップデータ</summary>
-    [SerializeField] private string _stringMapData;
+    [SerializeField] private int[] _intMapData;//string _stringMapData;
 
 
     public int x => _x;
     public int z => _z;
-    public string stringMapData => _stringMapData;
+    public int[] IntMapData => _intMapData;
+    //public string stringMapData => _stringMapData;
 
     /// <summary>
     /// マップデータ初期化
@@ -290,10 +322,11 @@ public class MapData
     /// <param name="mapx">マップサイズX</param>
     /// <param name="mapz">マップサイズZ</param>
     /// <param name="mapdata">文字列マップデータ</param>
-    public MapData(int mapx, int mapz, string mapdata)
+    public MapData(int mapx, int mapz, int[] mapdata)
     {
         _x = mapx;
         _z = mapz;
-        _stringMapData = mapdata;
+        _intMapData = mapdata;
+        //_stringMapData = mapdata;
     }
 }
