@@ -4,7 +4,7 @@
 
 [AquaBall](https://github.com/nittayoshihiro/AquaBall)
 
-## AquaBallポイント
+# AquaBallポイント
 
 ・[加速度センサー](https://github.com/nittayoshihiro/AquaBall/blob/master/Assets/Script/GravityController.cs)を使った操作
 
@@ -14,6 +14,9 @@
 
 ・[stateパターン](https://github.com/nittayoshihiro/AquaBall/blob/master/Assets/Script/GravityControllerBaseState.cs) を使ったコントローラー管理
 
+## 開発中
+
+・[マップを簡易コード](https://github.com/nittayoshihiro/AquaBall/blob/develop/Assets/Script/MazeMapping.cs)にさせて他のユーザーとマップを共有できるようにする
 ## 使用パッケージ
 
 Shader Graph
