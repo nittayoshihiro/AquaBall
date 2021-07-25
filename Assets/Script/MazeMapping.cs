@@ -190,7 +190,9 @@ public class MazeMapping : MonoBehaviour
     /// <returns></returns>
     public int[] MapdataCode(DrillingMethod.MapState[,] mapState)
     {
-        int[] mapdatacode = new int[mapState.GetLength(1)];
+        //マップデータの基礎を作成
+        int[] mapdatacode = new int[mapState.GetLength(1) + 1];
+        int startAndGoal = 0;
         for (int x = 0; x < mapState.GetLength(0); x++)
         {
             int mapSeed = 0;//マップ列内シード
@@ -205,9 +207,21 @@ public class MazeMapping : MonoBehaviour
                     }
                     mapSeed += two;
                 }
+
+                if (mapState[x, z] == DrillingMethod.MapState.Start)
+                {
+                    startAndGoal += x * 1000 + z * 100;
+                }
+
+                if (mapState[x, z] == DrillingMethod.MapState.Goal)
+                {
+                    startAndGoal += x * 10 + z;
+                }
             }
             mapdatacode[x] = mapSeed;
         }
+
+        mapdatacode[mapdatacode.Length - 1] = startAndGoal;
         return mapdatacode;
     }
 
@@ -221,21 +235,23 @@ public class MazeMapping : MonoBehaviour
         DrillingMethod.MapState[,] mapState = new DrillingMethod.MapState[m_mapSize, m_mapSize];
         int num = 1144;//２進数マップサイズ最大時
         int mapcode = 0;
-        for (int i = 0; i < mapdatacode.Length; i++)
+        string startGoal = mapdatacode[mapdatacode.Length - 1].ToString();
+
+        for (int x = 0; x < mapdatacode.Length - 1; x++)
         {
-            mapcode = mapdatacode[i];
+            mapcode = mapdatacode[x];
             num = 1024;
             Debug.Log(mapcode);
-            for (int j = 0; mapcode != 0; j++)
+            for (int z = mapdatacode.Length - 2; 0 != mapcode; z--)
             {
                 if (mapcode >= num)
                 {
                     mapcode -= num;
-                    mapState[i, j] = DrillingMethod.MapState.Wall;
+                    mapState[x, z] = DrillingMethod.MapState.Wall;
                 }
                 else
                 {
-                    mapState[i, j] = DrillingMethod.MapState.Road;
+                    mapState[x, z] = DrillingMethod.MapState.Road;
                 }
 
                 if (2 <= num)
@@ -248,50 +264,13 @@ public class MazeMapping : MonoBehaviour
                 }
                 Debug.Log(num + ":" + mapcode);
             }
-
         }
+
+        mapState[int.Parse(startGoal[0].ToString()), int.Parse(startGoal[1].ToString())] = DrillingMethod.MapState.Start;
+        mapState[int.Parse(startGoal[2].ToString()), int.Parse(startGoal[3].ToString())] = DrillingMethod.MapState.Goal;
+
         return mapState;
     }
-
-    ///// <summary>
-    ///// MapState[,]からMapDataに変換します
-    ///// </summary>
-    ///// <param name="mapState">mapState</param>
-    ///// <returns>string形式でマップデータを返します</returns>
-    //private string FromMapStateConversionToState(DrillingMethod.MapState[,] mapState)
-    //{
-    //    string mapdata = default;
-    //    for (int x = 0; x < mapState.GetLength(0); x++)
-    //    {
-    //        for (int z = 0; z < mapState.GetLength(1); z++)
-    //        {
-    //            mapdata += (int)mapState[x, z];
-    //            mapdata += ',';
-    //        }
-    //        mapdata += '\n';
-    //    }
-    //    return mapdata;
-    //}
-
-    ///// <summary>
-    ///// MapDataからMapState[,]に変換します
-    ///// </summary>
-    ///// <param name="mapData">変換したいMapData</param>
-    ///// <returns>マップデータを返します</returns>
-    //private DrillingMethod.MapState[,] FromStringConversionToMapState(MapData mapData)
-    //{
-    //    DrillingMethod.MapState[,] mapState = new DrillingMethod.MapState[mapData.x, mapData.z];
-    //    string[] one = mapData.stringMapData.Split('\n');
-    //    for (int x = 0; x < mapData.x; x++)
-    //    {
-    //        string[] two = one[x].Split(',');
-    //        for (int z = 0; z < mapData.z; z++)
-    //        {
-    //            mapState[x, z] = (DrillingMethod.MapState)int.Parse(two[z]);
-    //        }
-    //    }
-    //    return mapState;
-    //}
 
     /// <summary>マップ</summary>
     public GameObject GetMapObject => m_mapObject;
@@ -304,17 +283,16 @@ public class MazeMapping : MonoBehaviour
 public class MapData
 {
     /// <summary>マップサイズX</summary>
-    [SerializeField] private int _x;
+    [SerializeField] private int m_x;
     /// <summary>マップサイズZ</summary>
-    [SerializeField] private int _z;
+    [SerializeField] private int m_z;
     /// <summary>文字列マップデータ</summary>
-    [SerializeField] private int[] _intMapData;//string _stringMapData;
+    [SerializeField] private int[] m_intMapData;
 
 
-    public int x => _x;
-    public int z => _z;
-    public int[] IntMapData => _intMapData;
-    //public string stringMapData => _stringMapData;
+    public int x => m_x;
+    public int z => m_z;
+    public int[] IntMapData => m_intMapData;
 
     /// <summary>
     /// マップデータ初期化
@@ -324,9 +302,8 @@ public class MapData
     /// <param name="mapdata">文字列マップデータ</param>
     public MapData(int mapx, int mapz, int[] mapdata)
     {
-        _x = mapx;
-        _z = mapz;
-        _intMapData = mapdata;
-        //_stringMapData = mapdata;
+        m_x = mapx;
+        m_z = mapz;
+        m_intMapData = mapdata;
     }
 }
