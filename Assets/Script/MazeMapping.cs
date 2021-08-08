@@ -43,7 +43,6 @@ public class MazeMapping : MonoBehaviour
     /// <summary>マップ保持</summary>
     List<GameObject> m_maps = new List<GameObject>();
 
-
     /// <summary>マップを消します(プレイヤーも) </summary>
     public void DeletMap()
     {
@@ -151,7 +150,7 @@ public class MazeMapping : MonoBehaviour
     /// </summary>
     public void MapDataSave()
     {
-        m_mapData = new MapData(m_mapSize, m_mapSize, MapdataCode(m_drillingMethod.GetMapData));//FromMapStateConversionToState(m_drillingMethod.GetMapData));
+        m_mapData = new MapData(m_mapSize, m_mapSize, ColumnConvers32(MapdataCode(m_drillingMethod.GetMapData)));
         Debug.Log(m_mapData.IntMapData);
         FileController.TextSave(m_textName, JsonUtility.ToJson(m_mapData));
     }
@@ -162,9 +161,9 @@ public class MazeMapping : MonoBehaviour
     public void LoadAndMapCreate()
     {
         m_mapData = MapDataLoad;
-        DrillingMethod.MapState[,] mapState = MapDataCodeToMapState(m_mapData.IntMapData);//FromStringConversionToMapState(m_mapData);
+        DrillingMethod.MapState[,] mapState = MapDataCodeToMapState(BaseConversion.ColumnConvert10(m_mapData.IntMapData));
+        Debug.Log(mapState[2, 2]);
         m_drillingMethod.ResetMapData(m_mapData.x);
-        Debug.Log(new { mapState, m_drillingMethod.m_floormapdata, m_mapName, m_mapFloor });
         CreateFloorMap(mapState, m_drillingMethod.m_floormapdata, m_mapName, m_mapFloor);
         //マップデータを入れる
         m_maps.Add(GetMapObject);
@@ -237,15 +236,16 @@ public class MazeMapping : MonoBehaviour
         int mapcode = 0;
         string startGoal = mapdatacode[mapdatacode.Length - 1].ToString();
 
-        for (int x = 0; x < mapdatacode.Length - 1; x++)
+        for (int x = 0; x < mapdatacode.Length - 2; x++)
         {
             mapcode = mapdatacode[x];
-            num = 1024;
             Debug.Log(mapcode);
-            for (int z = mapdatacode.Length - 2; 0 != mapcode; z--)
+            num = 1144;
+            for (int z = mapdatacode.Length - 2; 0 < z; z--)
             {
                 if (mapcode >= num)
                 {
+                    Debug.Log("x:" + x + "z:" + z);
                     mapcode -= num;
                     mapState[x, z] = DrillingMethod.MapState.Wall;
                 }
@@ -253,6 +253,7 @@ public class MazeMapping : MonoBehaviour
                 {
                     mapState[x, z] = DrillingMethod.MapState.Road;
                 }
+
 
                 if (2 <= num)
                 {
@@ -265,7 +266,6 @@ public class MazeMapping : MonoBehaviour
                 Debug.Log(num + ":" + mapcode);
             }
         }
-
         mapState[int.Parse(startGoal[0].ToString()), int.Parse(startGoal[1].ToString())] = DrillingMethod.MapState.Start;
         mapState[int.Parse(startGoal[2].ToString()), int.Parse(startGoal[3].ToString())] = DrillingMethod.MapState.Goal;
 
@@ -274,6 +274,76 @@ public class MazeMapping : MonoBehaviour
 
     /// <summary>マップ</summary>
     public GameObject GetMapObject => m_mapObject;
+
+    /// <summary>
+    /// 32進数の配列
+    /// </summary>
+    private static char[] num32 = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V' };
+    /// <summary>１ケタ</summary>
+    char x1 = '0';
+    /// <summary>２ケタ</summary>
+    char x2 = '0';
+    /// <summary>３ケタ</summary>
+    char x3 = '0';
+    /// <summary>４ケタ</summary>
+    char x4 = '0';
+    /// <summary>32進数の変換結果</summary>
+    string xfin = default;
+    /// <summary>32進数のそれぞれの桁の重み</summary>
+    int xv1, xv2, xv3, xv4;
+
+    /// <summary>
+    /// 10進数を32進数で返します。
+    /// </summary>
+    /// <param name="num"></param>
+    public string Convers32(int num)
+    {
+        xv1 = (int)(num / (Math.Pow(32, 0))) % 32;
+        xv2 = (int)(num / (Math.Pow(32, 1))) % 32;
+        xv3 = (int)(num / (Math.Pow(32, 2))) % 32;
+        xv4 = (int)(num / (Math.Pow(32, 3))) % 32;
+        for (int i = 0; i < num32.Length; i++)
+        {
+            if (xv1 == i)
+            {
+                x1 = num32[i];
+            }
+            if (xv2 == i)
+            {
+                x2 = num32[i];
+            }
+            if (xv3 == i)
+            {
+                x3 = num32[i];
+            }
+            if (xv4 == i)
+            {
+                x4 = num32[i];
+            }
+
+        }
+        //桁の結合
+        xfin = new string (new char[] { x4, x3, x2, x1 });
+        Debug.Log("10進数：" + num + ",32進数" + xfin);
+        return xfin;
+    }
+
+    /// <summary>
+    /// 10進数の配列を32進数で返します
+    /// </summary>
+    /// <param name="nums"></param>
+    /// <returns></returns>
+    public string[] ColumnConvers32(int[] nums)
+    {
+        string[] conversionnum = new string[nums.Length];
+        for (int i = 0; i < nums.Length - 2; i++)
+        {
+            conversionnum[i] = Convers32(nums[i]);//addかもしれない
+        }
+        conversionnum[conversionnum.Length - 1] = nums[nums.Length - 1].ToString();
+        return conversionnum;
+    }
 }
 
 /// <summary>
@@ -287,12 +357,12 @@ public class MapData
     /// <summary>マップサイズZ</summary>
     [SerializeField] private int m_z;
     /// <summary>文字列マップデータ</summary>
-    [SerializeField] private int[] m_intMapData;
+    [SerializeField] private string[] m_intMapData;
 
 
     public int x => m_x;
     public int z => m_z;
-    public int[] IntMapData => m_intMapData;
+    public string[] IntMapData => m_intMapData;
 
     /// <summary>
     /// マップデータ初期化
@@ -300,7 +370,7 @@ public class MapData
     /// <param name="mapx">マップサイズX</param>
     /// <param name="mapz">マップサイズZ</param>
     /// <param name="mapdata">文字列マップデータ</param>
-    public MapData(int mapx, int mapz, int[] mapdata)
+    public MapData(int mapx, int mapz, string[] mapdata)
     {
         m_x = mapx;
         m_z = mapz;
