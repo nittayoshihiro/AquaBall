@@ -150,8 +150,7 @@ public class MazeMapping : MonoBehaviour
     /// </summary>
     public void MapDataSave()
     {
-        m_mapData = new MapData(m_mapSize, m_mapSize, ColumnConvers32(MapdataCode(m_drillingMethod.GetMapData)));
-        Debug.Log(m_mapData.IntMapData);
+        m_mapData = new MapData(m_mapSize, m_mapSize, ColumnConvert10to32(MapdataCode(m_drillingMethod.GetMapData)));
         FileController.TextSave(m_textName, JsonUtility.ToJson(m_mapData));
     }
 
@@ -161,7 +160,7 @@ public class MazeMapping : MonoBehaviour
     public void LoadAndMapCreate()
     {
         m_mapData = MapDataLoad;
-        DrillingMethod.MapState[,] mapState = MapDataCodeToMapState(BaseConversion.ColumnConvert10(m_mapData.IntMapData));
+        DrillingMethod.MapState[,] mapState = MapDataCodeToMapState(ColumnConvert32to10(m_mapData.IntMapData));
         Debug.Log(mapState[2, 2]);
         m_drillingMethod.ResetMapData(m_mapData.x);
         CreateFloorMap(mapState, m_drillingMethod.m_floormapdata, m_mapName, m_mapFloor);
@@ -232,40 +231,29 @@ public class MazeMapping : MonoBehaviour
     public DrillingMethod.MapState[,] MapDataCodeToMapState(int[] mapdatacode)
     {
         DrillingMethod.MapState[,] mapState = new DrillingMethod.MapState[m_mapSize, m_mapSize];
-        int num = 1144;//２進数マップサイズ最大時
         int mapcode = 0;
         string startGoal = mapdatacode[mapdatacode.Length - 1].ToString();
 
-        for (int x = 0; x < mapdatacode.Length - 2; x++)
+        for (int x = 0; x <= mapdatacode.Length - 2; x++)
         {
             mapcode = mapdatacode[x];
             Debug.Log(mapcode);
-            num = 1144;
-            for (int z = mapdatacode.Length - 2; 0 < z; z--)
+            for (int z = 0; z <= mapdatacode.Length - 2; z++)
             {
-                if (mapcode >= num)
+                if (mapcode % 2 == 1)
                 {
-                    Debug.Log("x:" + x + "z:" + z);
-                    mapcode -= num;
                     mapState[x, z] = DrillingMethod.MapState.Wall;
                 }
                 else
                 {
                     mapState[x, z] = DrillingMethod.MapState.Road;
                 }
-
-
-                if (2 <= num)
-                {
-                    num /= 2;
-                }
-                else
-                {
-                    num -= 1;
-                }
-                Debug.Log(num + ":" + mapcode);
+                Debug.Log("x:" + x + "z:" + z + "mapState" + mapState[x, z]);
+                mapcode /= 2;
             }
         }
+
+        Debug.Log("startGoal:" + startGoal + "mapdatacode:" + mapdatacode[mapdatacode.Length - 1]);
         mapState[int.Parse(startGoal[0].ToString()), int.Parse(startGoal[1].ToString())] = DrillingMethod.MapState.Start;
         mapState[int.Parse(startGoal[2].ToString()), int.Parse(startGoal[3].ToString())] = DrillingMethod.MapState.Goal;
 
@@ -286,8 +274,6 @@ public class MazeMapping : MonoBehaviour
     char x2 = '0';
     /// <summary>３ケタ</summary>
     char x3 = '0';
-    /// <summary>４ケタ</summary>
-    char x4 = '0';
     /// <summary>32進数の変換結果</summary>
     string xfin = default;
     /// <summary>32進数のそれぞれの桁の重み</summary>
@@ -297,12 +283,12 @@ public class MazeMapping : MonoBehaviour
     /// 10進数を32進数で返します。
     /// </summary>
     /// <param name="num"></param>
-    public string Convers32(int num)
+    public string Convert10to32(int num)
     {
         xv1 = (int)(num / (Math.Pow(32, 0))) % 32;
         xv2 = (int)(num / (Math.Pow(32, 1))) % 32;
         xv3 = (int)(num / (Math.Pow(32, 2))) % 32;
-        xv4 = (int)(num / (Math.Pow(32, 3))) % 32;
+
         for (int i = 0; i < num32.Length; i++)
         {
             if (xv1 == i)
@@ -317,14 +303,10 @@ public class MazeMapping : MonoBehaviour
             {
                 x3 = num32[i];
             }
-            if (xv4 == i)
-            {
-                x4 = num32[i];
-            }
-
         }
+
         //桁の結合
-        xfin = new string (new char[] { x4, x3, x2, x1 });
+        xfin = new string(new char[] { x3, x2, x1 });
         Debug.Log("10進数：" + num + ",32進数" + xfin);
         return xfin;
     }
@@ -334,16 +316,60 @@ public class MazeMapping : MonoBehaviour
     /// </summary>
     /// <param name="nums"></param>
     /// <returns></returns>
-    public string[] ColumnConvers32(int[] nums)
+    public string[] ColumnConvert10to32(int[] nums)
     {
         string[] conversionnum = new string[nums.Length];
-        for (int i = 0; i < nums.Length - 2; i++)
+        for (int i = 0; i < nums.Length - 1; i++)
         {
-            conversionnum[i] = Convers32(nums[i]);//addかもしれない
+            conversionnum[i] = Convert10to32(nums[i]);//addかもしれない
         }
         conversionnum[conversionnum.Length - 1] = nums[nums.Length - 1].ToString();
         return conversionnum;
     }
+
+    /// <summary>
+    /// 32進数から10進数で返します。
+    /// </summary>
+    /// <param name="num"></param>
+    /// <returns></returns>
+    public int Convert32to10(string num)
+    {
+        int num10 = default;
+        for (int i = 0; i < num32.Length; i++)
+        {
+            if (num32[i] == num[0])
+            {
+                num10 += (int)Math.Pow(32, 2) * i;
+            }
+            if (num32[i] == num[1])
+            {
+                num10 += (int)Math.Pow(32, 1) * i;
+            }
+            if (num32[i] == num[2])
+            {
+                num10 += (int)Math.Pow(32, 0) * i;
+            }
+        }
+        return num10;
+    }
+
+    /// <summary>
+    /// 32進数の配列を10進数で返します。
+    /// </summary>
+    /// <param name="nums"></param>
+    /// <returns></returns>
+    public int[] ColumnConvert32to10(string[] nums)
+    {
+        int[] conversionnum = new int[nums.Length];
+        for (int i = 0; i < nums.Length - 1; i++)
+        {
+            conversionnum[i] = Convert32to10(nums[i]);
+            Debug.Log("nums:" + nums[i] + "coversionnumi:" + conversionnum[i]);
+        }
+        conversionnum[conversionnum.Length - 1] = int.Parse(nums[nums.Length - 1]);
+        return conversionnum;
+    }
+
 }
 
 /// <summary>
